@@ -1,6 +1,7 @@
 #pragma once
 
 class Window;
+class Input;
 
 class Application {
 public:
@@ -10,4 +11,5 @@ public:
 private:
 	bool m_IsRunning;
 	Window* m_Window;
+	Input* m_Input;
 };

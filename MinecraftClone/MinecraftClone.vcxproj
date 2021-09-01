@@ -13,11 +13,15 @@
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Platform\glfwinput.cpp" />
     <ClCompile Include="src\Platform\glfwwindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
+    <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\Platform\glfwinput.h" />
     <ClInclude Include="src\Platform\glfwwindow.h" />
+    <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
