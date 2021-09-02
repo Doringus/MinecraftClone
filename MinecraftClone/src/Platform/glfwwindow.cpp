@@ -42,7 +42,6 @@ GlfwWindow::GlfwWindow(uint32_t width, uint32_t height, const std::string& title
 	glfwSetWindowSizeCallback(m_Window, resizeCallbackWrapper);
 	glfwSetFramebufferSizeCallback(m_Window, framebufferResizeCallbackWrapper);
 
-	glfwMakeContextCurrent(m_Window);
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 

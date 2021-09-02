@@ -2,15 +2,18 @@
 
 #include "Platform/glfwwindow.h"
 #include "Platform/glfwinput.h"
+#include "Platform/OpenGL/openglrenderingcontext.h"
 
 #include <iostream>
 
 Application::Application() noexcept : m_Window(new GlfwWindow()), m_IsRunning(false) {
 	m_Input = new GlfwInput(static_cast<GLFWwindow*>(m_Window->getNativeWindow()), std::make_unique<GlfwKeyWrapper>());
+	m_RenderingContext = new OpenGLRenderingContext(static_cast<GLFWwindow*>(m_Window->getNativeWindow()));
 }
 
 void Application::run() {
 	m_IsRunning = true;
+	m_RenderingContext->init();
 	while (m_Window->isOpen()) {
 		m_Window->pollEvents();
 		/// input
@@ -20,5 +23,6 @@ void Application::run() {
 		}
 		/// update
 		/// render
+		m_RenderingContext->swapBuffers();
 	}
 }
