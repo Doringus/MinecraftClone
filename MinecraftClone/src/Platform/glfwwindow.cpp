@@ -20,7 +20,7 @@ GlfwWindow::GlfwWindow(uint32_t width, uint32_t height, const std::string& title
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-	} else if (rendererApi == RendererApi::DirectX11) {
+	} else {
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	}
 	

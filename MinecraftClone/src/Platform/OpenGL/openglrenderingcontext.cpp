@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-OpenGLRenderingContext::OpenGLRenderingContext(GLFWwindow * window) noexcept : m_Window(window) {
+OpenGLRenderingContext::OpenGLRenderingContext(GLFWwindow* window) noexcept : m_Window(window) {
 
 }
 
