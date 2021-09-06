@@ -9,7 +9,7 @@ OpenGLShader::OpenGLShader(const std::filesystem::path& vertexShaderPath, const 
 
 bool OpenGLShader::create() noexcept {
 	/// load shader code from files
-	GLint result;
+	/*GLint result;
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderCode, NULL);
 	glCompileShader(vertexShader);
@@ -33,7 +33,8 @@ bool OpenGLShader::create() noexcept {
 		return false;
 	}
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	glDeleteShader(fragmentShader); */
+	return true;
 }
 
 void OpenGLShader::use() const noexcept {

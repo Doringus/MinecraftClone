@@ -3,6 +3,7 @@
 #include "Platform/glfwwindow.h"
 #include "Platform/glfwinput.h"
 #include "Platform/Renderer/OpenGL/openglrenderingcontext.h"
+#include "singleton.h"
 
 #include <iostream>
 

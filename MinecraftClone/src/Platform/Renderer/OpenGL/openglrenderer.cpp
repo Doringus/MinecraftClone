@@ -29,6 +29,7 @@ void OpenGLRenderer::clearBuffers() const noexcept {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+/// TODO: make batch const ref
 void OpenGLRenderer::drawIndexed(batch_t* batch) noexcept {
 	setRenderState(batch->state);
 	
