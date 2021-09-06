@@ -2,7 +2,7 @@
 
 #include "Platform/glfwwindow.h"
 #include "Platform/glfwinput.h"
-#include "Platform/OpenGL/openglrenderingcontext.h"
+#include "Platform/Renderer/OpenGL/openglrenderingcontext.h"
 
 #include <iostream>
 

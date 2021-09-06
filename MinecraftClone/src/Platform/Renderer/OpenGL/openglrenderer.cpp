@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 
+#include "openglshader.h"
+
 OpenGLRenderer::OpenGLRenderer(uint32_t width, uint32_t height) noexcept : IRenderer(width, height) {
 
 }
@@ -22,21 +24,22 @@ bool OpenGLRenderer::init() noexcept {
 	return true;
 }
 
+
 void OpenGLRenderer::clearBuffers() const noexcept {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRenderer::drawIndexed(batch_t const * batch) noexcept {
+void OpenGLRenderer::drawIndexed(batch_t* batch) noexcept {
 	setRenderState(batch->state);
 	
-	glUseProgram(static_cast<OpenGLShader*>(batch->shader)->getId());
-	glBindVertexArray(static_cast<OpenGLShader*>(batch->shader)->getVao());
+	batch->shader->use();
+
 	for (std::size_t i = 0; i < batch->vertexBuffers.size(); ++i) {
 
 	}
 }
 
-void OpenGLRenderer::drawElements(batch_t const * batch) noexcept {
+void OpenGLRenderer::drawElements(batch_t* batch) noexcept {
 
 }
 

@@ -40,8 +40,8 @@ public:
 	
 	virtual bool init() noexcept = 0;
 	virtual void clearBuffers() const noexcept = 0;
-	virtual void drawIndexed(batch_t const * batch) noexcept = 0;
-	virtual void drawElements(batch_t const * batch) noexcept = 0;
+	virtual void drawIndexed(batch_t* batch) noexcept = 0;
+	virtual void drawElements(batch_t* batch) noexcept = 0;
 protected:
 	virtual void setRenderState(const renderState_t& renderState) noexcept = 0;
 protected:
