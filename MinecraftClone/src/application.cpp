@@ -4,6 +4,7 @@
 #include "Platform/glfwinput.h"
 #include "Platform/Renderer/OpenGL/openglrenderingcontext.h"
 #include "singleton.h"
+#include "filesystem.h"
 
 #include <iostream>
 
@@ -15,6 +16,10 @@ Application::Application() noexcept : m_Window(new GlfwWindow()), m_IsRunning(fa
 void Application::run() {
 	m_IsRunning = true;
 	m_RenderingContext->init();
+	std::filesystem::path p = "src/Shaders/basic.frag";
+	std::cout << Singleton<Filesystem>::get().readFile(std::filesystem::absolute(p));
+	
+	std::cout << std::filesystem::absolute(p);
 	while (m_Window->isOpen()) {
 		m_Window->pollEvents();
 		/// input

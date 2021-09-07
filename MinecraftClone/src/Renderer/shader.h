@@ -18,7 +18,7 @@ public:
 	virtual bool create() noexcept = 0;
 	virtual void use() const noexcept = 0;
 	virtual void setMatrix(const Matrix4x4& matrix) noexcept = 0;
-	virtual void setTexture(ITexture const * texture) noexcept = 0;
+	virtual void setTexture(const ITexture& texture) noexcept = 0;
 
 protected:
 	std::filesystem::path m_VertexShaderPath, m_FragmentShaderPath;

@@ -1,6 +1,7 @@
 #include "openglshader.h"
 
-#include <GL/glew.h>
+#include "../../../singleton.h"
+#include "../../../filesystem.h"
 
 OpenGLShader::OpenGLShader(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath) :
 								IShader(vertexShaderPath, fragmentShaderPath) {
@@ -8,41 +9,61 @@ OpenGLShader::OpenGLShader(const std::filesystem::path& vertexShaderPath, const 
 }
 
 bool OpenGLShader::create() noexcept {
-	/// load shader code from files
-	/*GLint result;
+	GLint result;
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderCode, NULL);
+	std::string shaderCode = Singleton<Filesystem>::get().readFile(m_VertexShaderPath);
+	const char *shaderCodePtr = shaderCode.c_str();
+	glShaderSource(vertexShader, 1, &shaderCodePtr, NULL);
 	glCompileShader(vertexShader);
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &result);
 	if (!result) {
 		return false;
 	}
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderCode, NULL);
+	shaderCode = Singleton<Filesystem>::get().readFile(m_FragmentShaderPath);
+	shaderCodePtr = shaderCode.c_str();
+	glShaderSource(fragmentShader, 1, &shaderCodePtr, NULL);
 	glCompileShader(fragmentShader);
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &result);
 	if (!result) {
 		return false;
 	}
-	shader->id = glCreateProgram();
-	glAttachShader(shader->id, vertexShader);
-	glAttachShader(shader->id, fragmentShader);
-	glLinkProgram(shader->id);
-	glGetProgramiv(shader->id, GL_LINK_STATUS, &result);
+	m_ShaderId = glCreateProgram();
+	glAttachShader(m_ShaderId, vertexShader);
+	glAttachShader(m_ShaderId, fragmentShader);
+	glLinkProgram(m_ShaderId);
+	glGetProgramiv(m_ShaderId, GL_LINK_STATUS, &result);
 	if (!result) {
 		return false;
 	}
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader); */
+	glDeleteShader(fragmentShader);
+
+	// get all uniforms from shader
+	GLint count, size;
+	GLenum type;
+	GLchar name[100];
+	GLsizei length;
+
+	glGetProgramiv(m_ShaderId, GL_ACTIVE_UNIFORMS, &count);
+	for (GLint i = 0; i < count; ++i) {
+		glGetActiveUniform(m_ShaderId, i, 100, &length, &size, &type, name);
+		std::string stringName(name, length);
+		GLint location = glGetUniformLocation(m_ShaderId, stringName.c_str());
+		m_UniformLocations[location] = std::move(stringName);
+	}
+
 	return true;
 }
 
 void OpenGLShader::use() const noexcept {
-
+	glUseProgram(m_ShaderId);
+}
+	
+void OpenGLShader::setMatrix(const Matrix4x4& matrix) noexcept {
+	
 }
 
-void OpenGLShader::setMatrix(const Matrix4x4 & matrix) noexcept {
-}
+void OpenGLShader::setTexture(const ITexture& texture) noexcept {
 
-void OpenGLShader::setTexture(ITexture const * texture) noexcept {
 }
