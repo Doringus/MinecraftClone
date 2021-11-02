@@ -1,62 +1,34 @@
 #include "openglrenderer.h"
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "openglshader.h"
+#include "../../../window.h"
 
-OpenGLRenderer::OpenGLRenderer(uint32_t width, uint32_t height) noexcept : IRenderer(width, height) {
-
-}
-
-bool OpenGLRenderer::init() noexcept {
+OpenGLRenderer::OpenGLRenderer(IWindow* window) noexcept :
+							   IRenderer(window->getWidth(), window->getHeight()),
+							   m_Window(window) {
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) {
-		return false;
+	if(!glewInit()) {
+		/// error
 	}
-	// TODO: create logs later
-	///glEnable(GL_DEBUG_OUTPUT);
-	if (m_RenderState.enableDepthTest) {
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_NEVER + static_cast<int>(m_RenderState.function));
-	}
-	glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
-	
-	return true;
+	glViewport(0, 0, m_Window->getWidth(), m_Window->getHeight());
+	glfwMakeContextCurrent(static_cast<GLFWwindow*>(m_Window->getNativeWindow()));
 }
 
-
-void OpenGLRenderer::clearBuffers() const noexcept {
+void OpenGLRenderer::beginFrame() noexcept {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-/// TODO: make batch const ref
-void OpenGLRenderer::drawIndexed(batch_t* batch) noexcept {
-	setRenderState(batch->state);
+void OpenGLRenderer::push(batch_t& batch) noexcept {
 	
-	batch->shader->use();
-
-	for (std::size_t i = 0; i < batch->vertexBuffers.size(); ++i) {
-
-	}
 }
 
-void OpenGLRenderer::drawElements(batch_t* batch) noexcept {
-
+void OpenGLRenderer::draw() const noexcept {
+	
 }
 
-void OpenGLRenderer::setRenderState(const renderState_t& renderState) noexcept {
-	if (m_RenderState.enableDepthTest != renderState.enableDepthTest) {
-		m_RenderState.enableDepthTest = renderState.enableDepthTest;
-		if (renderState.enableDepthTest) {
-			glEnable(GL_DEPTH_TEST);
-		} else {
-			glDisable(GL_DEPTH_TEST);
-		}
-	}
-
-	if (m_RenderState.function != renderState.function) {
-		m_RenderState.function = renderState.function;
-		glDepthFunc(GL_NEVER + static_cast<int>(m_RenderState.function));
-	}
-	
+void OpenGLRenderer::endFrame() noexcept {
+	glfwSwapBuffers(static_cast<GLFWwindow*>(m_Window->getNativeWindow()));
 }

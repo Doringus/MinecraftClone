@@ -5,13 +5,13 @@
 
 #include "Renderer/renderer.h"
 
-class Window {
+class IWindow {
 public:
 
-	Window(uint32_t width = 640, uint32_t height = 480, const std::string& title = "window", RendererApi rendererApi = RendererApi::OpenGL) noexcept : 
+	IWindow(uint32_t width = 640, uint32_t height = 480, const std::string& title = "window", RendererApi rendererApi = RendererApi::OpenGL) noexcept : 
 		m_Width(width), m_Height(height), m_Title(title) {}
 	
-	virtual ~Window() {}
+	virtual ~IWindow() = default;
 
 	virtual bool isOpen() const noexcept = 0;
 	virtual void pollEvents() const = 0;

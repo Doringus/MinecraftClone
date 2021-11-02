@@ -23,7 +23,7 @@ int32_t GlfwKeyWrapper::getGameKey(int32_t apiKey) const noexcept {
 
 
 GlfwInput::GlfwInput(GLFWwindow * const window, std::unique_ptr<IKeyWrapper> wrapper) : m_Window(window) {
-	m_Wrapper = std::make_unique<GlfwKeyWrapper>();
+	m_Wrapper = std::move(wrapper);
 }
 
 void GlfwInput::update() noexcept {

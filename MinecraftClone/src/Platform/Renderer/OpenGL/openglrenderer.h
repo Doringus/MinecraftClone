@@ -2,15 +2,18 @@
 
 #include "../../../Renderer/renderer.h"
 
+struct GLFWwindow;
+class IWindow;
 
 class OpenGLRenderer : public IRenderer {
 public:
-	OpenGLRenderer(uint32_t width, uint32_t height) noexcept;
-	
-	bool init() noexcept override;
-	void clearBuffers() const noexcept override;
-	void drawIndexed(batch_t* batch) noexcept override;
-	void drawElements(batch_t* batch) noexcept override;
-protected:
-	void setRenderState(const renderState_t& renderState) noexcept override;
+	OpenGLRenderer(IWindow* window) noexcept;
+
+	void beginFrame() noexcept override;
+	void push(batch_t& batch) noexcept override;
+	void draw() const noexcept override;
+	void endFrame() noexcept override;
+
+private:
+	IWindow* m_Window;
 };

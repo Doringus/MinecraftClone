@@ -17,22 +17,18 @@
     <ClCompile Include="src\Platform\glfwinput.cpp" />
     <ClCompile Include="src\Platform\glfwwindow.cpp" />
     <ClCompile Include="src\Platform\Renderer\OpenGL\openglrenderer.cpp" />
-    <ClCompile Include="src\Platform\Renderer\OpenGL\openglrenderingcontext.cpp" />
     <ClCompile Include="src\Platform\Renderer\OpenGL\openglshader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
-    <ClInclude Include="src\buffer.h" />
     <ClInclude Include="src\filesystem.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\Platform\glfwinput.h" />
     <ClInclude Include="src\Platform\glfwwindow.h" />
     <ClInclude Include="src\Platform\Renderer\OpenGL\openglrenderer.h" />
-    <ClInclude Include="src\Platform\Renderer\OpenGL\openglrenderingcontext.h" />
     <ClInclude Include="src\Platform\Renderer\OpenGL\openglshader.h" />
     <ClInclude Include="src\Renderer\texture.h" />
     <ClInclude Include="src\Renderer\renderer.h" />
-    <ClInclude Include="src\Renderer\renderingcontext.h" />
     <ClInclude Include="src\Renderer\shader.h" />
     <ClInclude Include="src\singleton.h" />
     <ClInclude Include="src\window.h" />

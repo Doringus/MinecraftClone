@@ -5,7 +5,7 @@
 static bool glfwInitialized = false;
 
 GlfwWindow::GlfwWindow(uint32_t width, uint32_t height, const std::string& title, RendererApi rendererApi) noexcept
-	: Window(width, height, title, rendererApi) {
+	: IWindow(width, height, title, rendererApi) {
 
 	if (!glfwInitialized) {
 		if (!glfwInit()) {
@@ -72,6 +72,6 @@ void GlfwWindow::windowResizeCallback(GLFWwindow * window, int32_t width, int32_
 	std::cout << "Resize\n";
 }
 
-void GlfwWindow::framebufferResizeCallback(GLFWwindow * window, int32_t widht, int32_t height) {
+void GlfwWindow::framebufferResizeCallback(GLFWwindow * window, int32_t width, int32_t height) {
 	std::cout << "Framebuffer resize\n";
 }

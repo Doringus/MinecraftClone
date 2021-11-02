@@ -1,17 +1,18 @@
 #pragma once
 
-class Window;
+class IWindow;
 class Input;
-class IRenderingContext;
+class IRenderer;
 
 class Application {
 public:
 	Application() noexcept;
+	~Application();
 
 	void run();
 private:
 	bool m_IsRunning;
-	Window* m_Window;
+	IWindow* m_Window;
 	Input* m_Input;
-	IRenderingContext* m_RenderingContext;
+	IRenderer* m_Renderer;
 };

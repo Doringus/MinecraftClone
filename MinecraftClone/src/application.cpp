@@ -2,7 +2,7 @@
 
 #include "Platform/glfwwindow.h"
 #include "Platform/glfwinput.h"
-#include "Platform/Renderer/OpenGL/openglrenderingcontext.h"
+#include "Platform/Renderer/OpenGL/openglrenderer.h"
 #include "singleton.h"
 #include "filesystem.h"
 
@@ -10,16 +10,20 @@
 
 Application::Application() noexcept : m_Window(new GlfwWindow()), m_IsRunning(false) {
 	m_Input = new GlfwInput(static_cast<GLFWwindow*>(m_Window->getNativeWindow()), std::make_unique<GlfwKeyWrapper>());
-	m_RenderingContext = new OpenGLRenderingContext(static_cast<GLFWwindow*>(m_Window->getNativeWindow()));
+	m_Renderer = new OpenGLRenderer(m_Window);
 }
+
+Application::~Application() {
+	delete m_Renderer;
+	delete m_Window;
+}
+
 
 void Application::run() {
 	m_IsRunning = true;
-	m_RenderingContext->init();
 	std::filesystem::path p = "src/Shaders/basic.frag";
 	std::cout << Singleton<Filesystem>::get().readFile(std::filesystem::absolute(p));
 	
-	std::cout << std::filesystem::absolute(p);
 	while (m_Window->isOpen()) {
 		m_Window->pollEvents();
 		/// input
@@ -29,6 +33,7 @@ void Application::run() {
 		}
 		/// update
 		/// render
-		m_RenderingContext->swapBuffers();
+		m_Renderer->beginFrame();
+		m_Renderer->endFrame();
 	}
 }
