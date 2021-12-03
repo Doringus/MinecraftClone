@@ -12,29 +12,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\filesystem.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Platform\glfwinput.cpp" />
-    <ClCompile Include="src\Platform\glfwwindow.cpp" />
-    <ClCompile Include="src\Platform\Renderer\OpenGL\openglrenderer.cpp" />
-    <ClCompile Include="src\Platform\Renderer\OpenGL\openglshader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\application.h" />
-    <ClInclude Include="src\filesystem.h" />
-    <ClInclude Include="src\input.h" />
-    <ClInclude Include="src\Platform\glfwinput.h" />
-    <ClInclude Include="src\Platform\glfwwindow.h" />
-    <ClInclude Include="src\Platform\Renderer\OpenGL\openglrenderer.h" />
-    <ClInclude Include="src\Platform\Renderer\OpenGL\openglshader.h" />
-    <ClInclude Include="src\Renderer\texture.h" />
-    <ClInclude Include="src\Renderer\renderer.h" />
-    <ClInclude Include="src\Renderer\shader.h" />
-    <ClInclude Include="src\singleton.h" />
-    <ClInclude Include="src\window.h" />
+    <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
+    <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
+    <ClCompile Include="src\platform\glfw\input.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglinputlayout.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\basic.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\application.h" />
+    <ClInclude Include="src\buffer.h" />
+    <ClInclude Include="src\platform\glfw\input.h" />
+    <ClInclude Include="src\iwindow.h" />
+    <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
+    <ClInclude Include="src\platform\glfw\glfwwindow.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglinputlayout.h" />
+    <ClInclude Include="src\platform\renderer\opengl\vertexbuffer.h" />
+    <ClInclude Include="src\renderer\bufferlayout.h" />
+    <ClInclude Include="src\renderer\iinputlayout.h" />
+    <ClInclude Include="src\renderer\renderer.h" />
+    <ClInclude Include="src\renderer\vertexbuffer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2F1A8EC6-1BE8-81CC-047C-F2F2F0E85D31}</ProjectGuid>
@@ -48,13 +47,13 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

@@ -3,6 +3,7 @@
 bin/
 Debug/
 bin-int/
+Vendor/
 
 #Files
 *.user

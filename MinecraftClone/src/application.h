@@ -1,18 +1,24 @@
 #pragma once
 
-class IWindow;
+#include "iwindow.h"
+
+#include <memory>
+
 class Input;
-class IRenderer;
 
 class Application {
 public:
 	Application() noexcept;
-	~Application();
+	virtual ~Application() = default;
+
+	Application(const Application&) = delete;
+	Application(Application&&) = delete;
+	Application& operator=(const Application&) = delete;
+	Application& operator=(Application&&) = delete;
 
 	void run();
 private:
 	bool m_IsRunning;
-	IWindow* m_Window;
 	Input* m_Input;
-	IRenderer* m_Renderer;
+	std::shared_ptr<IWindow> m_Window;
 };
