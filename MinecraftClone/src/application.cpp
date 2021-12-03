@@ -7,14 +7,17 @@
 #include <iostream>
 #include <array>
 
-#include "platform/glfw/glfwwindow.h"
-#include "platform/glfw/glfwinputmapper.h"
-#include "platform/glfw/input.h"
-#include "platform/renderer/opengl/vertexbuffer.h"
 
 #include "renderer/renderer.h"
 #include "renderer/bufferlayout.h"
 #include "buffer.h"
+
+#include "platform/glfw/glfwwindow.h"
+#include "platform/glfw/glfwinputmapper.h"
+#include "platform/glfw/input.h"
+#include "platform/renderer/opengl/vertexbuffer.h"
+#include "platform/renderer/opengl/openglrenderer.h"
+
 
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
@@ -106,14 +109,14 @@ void Application::run() {
 
     glUseProgram(shaderProgram);
 
+    IRenderer* renderer = new OpenglRenderer();
+
     while (m_Window->isOpen()) {
         m_Input->update();
         if (m_Input->isKeyPressed(GameKey::KEY_A)) {
             std::cout << "A pressed\n";
         }
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer->beginFrame();
 
         layout.bind();
         vertexBuffer.bind();
@@ -126,6 +129,7 @@ void Application::run() {
     m_IsRunning = false;
 
     glDeleteProgram(shaderProgram);
+    delete renderer;
 
     glfwTerminate();
 }
