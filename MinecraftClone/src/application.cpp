@@ -15,7 +15,7 @@
 #include "platform/glfw/glfwwindow.h"
 #include "platform/glfw/glfwinputmapper.h"
 #include "platform/glfw/input.h"
-#include "platform/renderer/opengl/vertexbuffer.h"
+#include "platform/renderer/opengl/openglvertexbuffer.h"
 #include "platform/renderer/opengl/openglrenderer.h"
 #include "platform/renderer/opengl/openglshader.h"
 #include "platform/renderer/opengl/openglindexbuffer.h"
@@ -77,8 +77,8 @@ void Application::run() {
     OpenglVertexBuffer<vertex_t> vertexBuffer(layout);
     OpenglIndexBuffer indexBuffer(layout);
 
-    vertexBuffer.setBuffer(std::move(verticesBuffer));
-    indexBuffer.setBuffer(std::move(indices));
+    vertexBuffer.setData(verticesBuffer);
+    indexBuffer.setData(indices);
     OpenglShader shader(vertexShaderSource, fragmentShaderSource);
 
     shader.bind();
@@ -99,7 +99,6 @@ void Application::run() {
         layout.bind();
         vertexBuffer.bind();
         indexBuffer.bind();
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         m_Window->swapBuffers();
         m_Window->pollEvents();

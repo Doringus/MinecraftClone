@@ -33,7 +33,7 @@ public:
 		return *this;
 	}
 
-	T* get() noexcept {
+	T* get() const noexcept {
 		return m_Data;
 	}
 	

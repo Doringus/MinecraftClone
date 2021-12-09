@@ -1,21 +1,19 @@
 #pragma once
 
-#include "../../../renderer/iindexbuffer.h"
-
 #include <cstdint>
 
+#include "openglgeometrybuffer.h"
 #include "openglinputlayout.h"
 
 
-class OpenglIndexBuffer : public IIndexBuffer {
+class OpenglIndexBuffer : public OpenglGeometryBuffer<GLuint> {
 public:
-	OpenglIndexBuffer(OpenglInputLayout& inputLayout);
-	~OpenglIndexBuffer();
+	explicit OpenglIndexBuffer(OpenglInputLayout& inputLayout) : m_Layout(inputLayout) {}
+	~OpenglIndexBuffer() = default;
 
-	void setBuffer(Buffer<uint32_t> buffer) override;
-	void bind() override;
+	void bind() override {
+		glVertexArrayElementBuffer(m_Layout.getId(), m_Id);
+	}
 private:
-	uint32_t m_Id;
 	OpenglInputLayout& m_Layout;
-	Buffer<uint32_t> m_Buffer;
 };
