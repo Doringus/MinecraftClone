@@ -16,6 +16,7 @@
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
     <ClCompile Include="src\platform\glfw\input.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglindexbuffer.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglinputlayout.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglrenderer.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglshader.cpp" />
@@ -30,11 +31,13 @@
     <ClInclude Include="src\iwindow.h" />
     <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
     <ClInclude Include="src\platform\glfw\glfwwindow.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglindexbuffer.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglinputlayout.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglrenderer.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglshader.h" />
     <ClInclude Include="src\platform\renderer\opengl\vertexbuffer.h" />
     <ClInclude Include="src\renderer\bufferlayout.h" />
+    <ClInclude Include="src\renderer\iindexbuffer.h" />
     <ClInclude Include="src\renderer\iinputlayout.h" />
     <ClInclude Include="src\renderer\ishader.h" />
     <ClInclude Include="src\renderer\mesh.h" />

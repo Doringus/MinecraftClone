@@ -18,6 +18,7 @@
 #include "platform/renderer/opengl/vertexbuffer.h"
 #include "platform/renderer/opengl/openglrenderer.h"
 #include "platform/renderer/opengl/openglshader.h"
+#include "platform/renderer/opengl/openglindexbuffer.h"
 
 #include "../vendor/glm/gtc/matrix_transform.hpp"
 
@@ -63,13 +64,21 @@ void Application::run() {
     verticesBuffer.pushBack({ {-0.5f, -0.5f, 0.0f},   {0.f, 1.f, 0.f}, {} });
     verticesBuffer.pushBack({ {0.0f,  0.5f, 0.0f}, {0.f, 0.f, 1.f}, {} });
 
+    Buffer<uint32_t> indices(static_cast<uint32_t*>(std::malloc(sizeof(uint32_t) * 3)), sizeof(uint32_t) * 3);
+    indices.pushBack(0);
+    indices.pushBack(1);
+    indices.pushBack(2);
+
     BufferLayout bufferLayout = { 
         {"position", ShaderDataType::FLOAT3, 3},
         {"color", ShaderDataType::FLOAT3, 3}
     };
     OpenglInputLayout layout(bufferLayout);
     OpenglVertexBuffer<vertex_t> vertexBuffer(layout);
+    OpenglIndexBuffer indexBuffer(layout);
+
     vertexBuffer.setBuffer(std::move(verticesBuffer));
+    indexBuffer.setBuffer(std::move(indices));
     OpenglShader shader(vertexShaderSource, fragmentShaderSource);
 
     shader.bind();
@@ -89,8 +98,9 @@ void Application::run() {
 
         layout.bind();
         vertexBuffer.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+        indexBuffer.bind();
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         m_Window->swapBuffers();
         m_Window->pollEvents();
     }
