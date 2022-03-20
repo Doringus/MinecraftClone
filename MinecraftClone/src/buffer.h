@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstddef>
+#include <utility>
+
 
 template <typename T>
 class Buffer {
@@ -31,7 +33,7 @@ public:
 		return *this;
 	}
 
-	T* get() noexcept {
+	T* get() const noexcept {
 		return m_Data;
 	}
 	
