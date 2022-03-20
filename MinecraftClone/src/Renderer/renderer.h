@@ -9,12 +9,3 @@ struct vertex_t {
 	glm::vec3 color;
 	glm::vec2 texCoords;
 };
-
-class IRenderer {
-public:
-	virtual ~IRenderer() = default;
-
-	virtual void beginFrame() = 0;
-	virtual void submit() = 0;
-	virtual void render() = 0;
-};
