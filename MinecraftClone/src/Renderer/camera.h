@@ -3,6 +3,9 @@
 #include "../../vendor/glm/vec3.hpp"
 #include "../../vendor/glm/matrix.hpp"
 
+
+class Input;
+
 namespace graphics {
 
 	class Camera {
@@ -14,6 +17,8 @@ namespace graphics {
 		// returns projection * view matrix
 		glm::mat4 calculateCameraMatrix() const noexcept;
 		glm::vec3 position() const noexcept;
+
+		void update(const Input& input);
 
 	private:
 		double m_Pitch, m_Yaw;

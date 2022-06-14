@@ -11,10 +11,21 @@ void Input::update() noexcept {
 		m_Keys[i] = glfwGetKey(static_cast<GLFWwindow*>(m_Window->getNativeWindow()), 
 			m_Mapper.getApiKey(static_cast<GameKey>(i)));
 	}
+
+	m_PrevPosition = m_CurrentPosition;
+	glfwGetCursorPos(static_cast<GLFWwindow*>(m_Window->getNativeWindow()), &m_CurrentPosition.x, &m_CurrentPosition.y);
 }
 
 bool Input::isKeyPressed(GameKey key) const noexcept {
 	return m_Keys[static_cast<std::size_t>(key)];
+}
+
+Input::mousePosition_t Input::getCurrentMousePosition() const noexcept {
+	return m_CurrentPosition;
+}
+
+Input::mousePosition_t Input::getPreviousMousePosition() const noexcept {
+	return m_PrevPosition;
 }
 
 int32_t Input::InputMapper::getApiKey(GameKey gameKey) const noexcept {

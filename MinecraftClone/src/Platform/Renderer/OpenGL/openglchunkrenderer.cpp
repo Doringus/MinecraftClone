@@ -1,6 +1,6 @@
 #include "openglchunkrenderer.h"
 
-#include <iostream>
+#include "../../../renderer/camera.h"
 
 namespace graphics {
 	namespace opengl {
@@ -22,7 +22,7 @@ namespace graphics {
 						graphicsComponent->renderData.getIndices().size() * sizeof(uint32_t), sizeof(uint32_t));
 					graphicsComponent->renderData.markFlushedToGPU();
 				}
-
+				m_ChunkShader.setUniformMat4("mvp", camera.calculateCameraMatrix() * glm::mat4(1.0));
 				graphicsComponent->indices.bind();
 				graphicsComponent->vertices.bind();
 				glDrawElements(GL_TRIANGLES, graphicsComponent->renderData.getIndices().size(), GL_UNSIGNED_INT, 0);

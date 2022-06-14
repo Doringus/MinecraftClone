@@ -27,6 +27,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "../vendor/glm/gtc/matrix_transform.hpp"
+
 
 Application::Application() noexcept : m_IsRunning(false) {
     /* init glfw as main window lib */
@@ -46,28 +48,7 @@ void Application::run() {
     GLenum      err;
     if ((err = glewInit()) != GLEW_OK)
         std::cout << glewGetErrorString(err) << std::endl;
-    /*
-    std::vector<vertex_t> verticesBuffer;
-    verticesBuffer.push_back({ {0.5f, -0.5f, 0.0f},  {0.0f, 0.0f} });
-    verticesBuffer.push_back({ {-0.5f, -0.5f, 0.0f},   {0.5f, 1.f} });
-    verticesBuffer.push_back({ {0.0f,  0.5f, 0.0f}, {1.f, 0.f}});
 
-    using namespace graphics::opengl;
-
-    graphics::BufferLayout bufferLayout = {
-        {"position", graphics::ShaderDataType::FLOAT3, 3},
-        {"texCoords", graphics::ShaderDataType::FLOAT2, 2}
-    };
-    OpenglInputLayout layout(bufferLayout);
-    OpenglVertexBuffer vertexBuffer(&layout);
-    vertexBuffer.setBuffer(verticesBuffer.data(), verticesBuffer.size() * sizeof(vertex_t), sizeof(vertex_t));
-    OpenglShader openglShader(std::filesystem::absolute("src/shaders/default.vert"), std::filesystem::absolute("src/shaders/default.frag"));
-    openglShader.use();
-    
-    graphics::Image image(std::filesystem::path("res\\texture.png"), 4);
-    OpenglTexture texture(image);
-    texture.bind(0);
-    */
     graphics::opengl::OpenglChunkRenderer renderer;
     auto chunk = renderer.createChunkRenderData();
     chunk->beginChunk();
@@ -78,18 +59,15 @@ void Application::run() {
         {{1.0f, 0.0f, 0.0f}, {0.2f, 0.0f}},
         {{1.0f, 1.0f, 0.0f}, {0.2f, 1.0f}}
         }, {0, 1, 3, 1, 2, 3});
+
+    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
+
     while (m_Window->isOpen()) {
         m_Input->update();
-        if (m_Input->isKeyPressed(GameKey::KEY_A)) {
-            std::cout << "A pressed\n";
-        }
-
+        camera.update(*m_Input);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        renderer.render(graphics::Camera());
-      //  layout.bind();
-       // vertexBuffer.bind();
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        renderer.render(camera);
 
         m_Window->swapBuffers();
         m_Window->pollEvents();
