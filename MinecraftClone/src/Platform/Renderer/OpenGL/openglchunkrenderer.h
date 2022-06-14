@@ -3,11 +3,11 @@
 #include <vector>
 
 #include "../../../renderer/chunkrenderer.h"
-#include "openglinputlayout.h"
-#include "openglvertexbuffer.h"
-#include "openglindexbuffer.h"
-#include "openglshader.h"
-#include "opengltexture.h"
+#include "base/openglinputlayout.h"
+#include "base/openglvertexbuffer.h"
+#include "base/openglindexbuffer.h"
+#include "base/openglshader.h"
+#include "base/opengltexture.h"
 
 namespace graphics {
 

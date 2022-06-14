@@ -9,7 +9,7 @@ class Input;
 class Application {
 public:
 	Application() noexcept;
-	virtual ~Application() = default;
+	virtual ~Application() noexcept;
 
 	Application(const Application&) = delete;
 	Application(Application&&) = delete;

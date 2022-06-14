@@ -8,6 +8,8 @@ GlfwWindow::GlfwWindow(const std::string& title, int32_t width, int32_t height) 
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), nullptr, nullptr);
+	glfwMakeContextCurrent(m_Window); // move to context class
+	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 GlfwWindow::~GlfwWindow() {

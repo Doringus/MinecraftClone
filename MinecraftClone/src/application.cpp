@@ -11,11 +11,8 @@
 #include "platform/glfw/glfwinputmapper.h"
 #include "platform/glfw/input.h"
 
-#include "platform/renderer/opengl/openglvertexbuffer.h"
-#include "platform/renderer/opengl/openglinputlayout.h"
-#include "platform/renderer/opengl/openglshader.h"
-#include "platform/renderer/opengl/opengltexture.h"
 #include "platform/renderer/opengl/openglchunkrenderer.h"
+#include "platform/renderer/opengl/openglrenderercontext.h"
 
 #include "renderer/bufferlayout.h"
 #include "renderer/camera.h"
@@ -38,18 +35,18 @@ Application::Application() noexcept : m_IsRunning(false) {
     stbi_set_flip_vertically_on_load(1);
 }
 
+Application::~Application() noexcept {
+    glfwTerminate();
+}
+
 void Application::run() {
 	m_IsRunning = true;
     spdlog::info("Application started");
-    glfwMakeContextCurrent(static_cast<GLFWwindow*>(m_Window->getNativeWindow()));
-   // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    glewExperimental = GL_TRUE;
-    GLenum      err;
-    if ((err = glewInit()) != GLEW_OK)
-        std::cout << glewGetErrorString(err) << std::endl;
-
+    
+    graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
+
+
     auto chunk = renderer.createChunkRenderData();
     chunk->beginChunk();
 
@@ -72,8 +69,8 @@ void Application::run() {
 
         m_Input->update();
         camera.update(*m_Input, dt);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        context.clearScreen(0.2, 0.2, 0.2, 1.0);
+        context.clearFramebuffer();
         renderer.render(camera);
 
         m_Window->swapBuffers();
@@ -88,6 +85,4 @@ void Application::run() {
     }
 
     m_IsRunning = false;
-
-    glfwTerminate();
 }

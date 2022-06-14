@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../../../renderer/image.h"
+#include "../../../../renderer/image.h"
 
 namespace graphics {
 	namespace opengl {

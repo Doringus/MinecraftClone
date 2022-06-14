@@ -5,8 +5,8 @@
 
 #include <spdlog/spdlog.h>
 
-#include "../../../utils.h"
-#include "../../../../vendor/glm/gtc/type_ptr.hpp"
+#include "../../../../utils.h"
+#include "../../../../../vendor/glm/gtc/type_ptr.hpp"
 
 using namespace graphics::opengl;
 

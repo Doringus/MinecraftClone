@@ -1,6 +1,6 @@
 #include "opengltexture.h"
 
-#include "../../../renderer/image.h"
+#include "../../../../renderer/image.h"
 
 using namespace graphics::opengl;
 

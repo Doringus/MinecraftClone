@@ -9,7 +9,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../../../../vendor/glm/mat4x4.hpp"
+#include "../../../../../vendor/glm/mat4x4.hpp"
 
 namespace graphics {
 	namespace opengl {
