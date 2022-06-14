@@ -18,7 +18,7 @@ namespace graphics {
 		glm::mat4 calculateCameraMatrix() const noexcept;
 		glm::vec3 position() const noexcept;
 
-		void update(const Input& input);
+		void update(const Input& input, float dt);
 
 	private:
 		double m_Pitch, m_Yaw;

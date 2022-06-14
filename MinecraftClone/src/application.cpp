@@ -61,16 +61,30 @@ void Application::run() {
         }, {0, 1, 3, 1, 2, 3});
 
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
+    
+    double dt = 1.0 / 60.0;
+    double beginTicks = glfwGetTimerValue();
 
     while (m_Window->isOpen()) {
+        m_Window->pollEvents();
+
+        spdlog::info("Frame time {0}ms", dt * 1000);
+
         m_Input->update();
-        camera.update(*m_Input);
+        camera.update(*m_Input, dt);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         renderer.render(camera);
 
         m_Window->swapBuffers();
-        m_Window->pollEvents();
+        
+        double endTicks = glfwGetTimerValue();
+        dt = (endTicks - beginTicks) / (double)glfwGetTimerFrequency();
+
+        if (dt > 1.0f) {
+            dt = 1.0f / 60.0f;
+        }
+        beginTicks = endTicks;
     }
 
     m_IsRunning = false;

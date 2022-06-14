@@ -19,27 +19,27 @@ namespace graphics {
 		return m_Position;
 	}
 
-	void Camera::update(const Input& input) {
+	void Camera::update(const Input& input, float dt) {
 		/* Move camera */
 		if (input.isKeyPressed(GameKey::KEY_W)) {
-			m_Position +=  0.3f * m_Front;
+			m_Position +=  (3.f * dt) * m_Front;
 		}
 		if (input.isKeyPressed(GameKey::KEY_S)) {
-			m_Position -= 0.3f * m_Front;
+			m_Position -= (3.f * dt) * m_Front;
 		}
 		if (input.isKeyPressed(GameKey::KEY_A)) {
-			m_Position -= glm::normalize(glm::cross(m_Front, m_Up)) * (0.3f);
+			m_Position -= glm::normalize(glm::cross(m_Front, m_Up)) * (3.f * dt);
 		}
 		if (input.isKeyPressed(GameKey::KEY_D)) {
-			m_Position += glm::normalize(glm::cross(m_Front, m_Up)) * (0.3f);
+			m_Position += glm::normalize(glm::cross(m_Front, m_Up)) * (3.f * dt);
 		}
 		/* Rotate camera */
 		auto currentPosition = input.getCurrentMousePosition();
 		auto prevPosition = input.getPreviousMousePosition();
 		double offsetX = currentPosition.x - prevPosition.x;
 		double offsetY = currentPosition.y - prevPosition.y;
-		offsetX *= 0.3f;
-		offsetY *= 0.3f;
+		offsetX *= 3.f * dt;
+		offsetY *= 3.f * dt;
 		m_Yaw += offsetX;
 		m_Pitch -= offsetY;
 		if (m_Pitch > 89.0f) {
