@@ -16,24 +16,40 @@
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
     <ClCompile Include="src\platform\glfw\input.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglchunkrenderer.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglindexbuffer.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglinputlayout.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglshader.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\opengltexture.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglvertexbuffer.cpp" />
+    <ClCompile Include="src\renderer\camera.cpp" />
+    <ClCompile Include="src\renderer\chunkrenderer.cpp" />
+    <ClCompile Include="src\renderer\image.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\basic.frag" />
+    <None Include="src\shaders\default.frag" />
+    <None Include="src\shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
-    <ClInclude Include="src\buffer.h" />
     <ClInclude Include="src\platform\glfw\input.h" />
     <ClInclude Include="src\iwindow.h" />
     <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
     <ClInclude Include="src\platform\glfw\glfwwindow.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglchunkrenderer.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglindexbuffer.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglshader.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglinputlayout.h" />
-    <ClInclude Include="src\platform\renderer\opengl\vertexbuffer.h" />
+    <ClInclude Include="src\platform\renderer\opengl\opengltexture.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglvertexbuffer.h" />
     <ClInclude Include="src\renderer\bufferlayout.h" />
-    <ClInclude Include="src\renderer\iinputlayout.h" />
-    <ClInclude Include="src\renderer\renderer.h" />
-    <ClInclude Include="src\renderer\vertexbuffer.h" />
+    <ClInclude Include="src\renderer\camera.h" />
+    <ClInclude Include="src\renderer\chunkrenderer.h" />
+    <ClInclude Include="src\renderer\image.h" />
+    <ClInclude Include="src\rid.h" />
+    <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2F1A8EC6-1BE8-81CC-047C-F2F2F0E85D31}</ProjectGuid>
@@ -79,21 +95,30 @@
     <TargetName>MinecraftClone</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
+    <VcpkgManifestInstall>false</VcpkgManifestInstall>
+    <VcpkgAutoLink>false</VcpkgAutoLink>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgInstalledDir>.</VcpkgInstalledDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\glfw\include;..\Dependencies\glew\include;..\Dependencies\libnoise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;SPDLOG_USE_STD_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\glfw\include;..\Dependencies\glew\include;..\Dependencies\libnoise\include;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Dependencies\glfw\lib;..\Dependencies\glew\lib;..\Dependencies\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\lib;..\Dependencies\glfw\lib;..\Dependencies\glew\lib;..\Dependencies\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -118,6 +143,5 @@
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

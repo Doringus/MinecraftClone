@@ -1,6 +1,7 @@
 #include "openglinputlayout.h"
 
-#include "../../../renderer/renderer.h"
+
+using namespace graphics::opengl;
 
 OpenglInputLayout::OpenglInputLayout(const BufferLayout& layout) : m_Layout(layout) {
 	glCreateVertexArrays(1, &m_Id);
@@ -20,11 +21,11 @@ OpenglInputLayout::~OpenglInputLayout() {
 
 }
 
-void OpenglInputLayout::bind() {
+void OpenglInputLayout::bind() const {
 	glBindVertexArray(m_Id);
 }
 
-void OpenglInputLayout::unbind() {
+void OpenglInputLayout::unbind() const {
 	glBindVertexArray(0);
 }
 

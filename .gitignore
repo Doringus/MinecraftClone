@@ -4,6 +4,7 @@ bin/
 Debug/
 bin-int/
 Vendor/
+Dependencies/
 
 #Files
 *.user
