@@ -10,8 +10,8 @@ namespace graphics {
 		return m_IsUpdated;
 	}
 	void ChunkRenderer::ChunkRenderData::beginChunk() noexcept {
-		m_Vertices.clear();
-		m_Indices.clear();
+		//m_Vertices.clear();
+		//m_Indices.clear();
 		m_IsUpdated = true;
 	}
 	void ChunkRenderer::ChunkRenderData::markFlushedToGPU() noexcept {

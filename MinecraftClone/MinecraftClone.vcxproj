@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\game\world\chunk.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
+    <ClInclude Include="src\game\world\chunk.h" />
     <ClInclude Include="src\platform\glfw\input.h" />
     <ClInclude Include="src\iwindow.h" />
     <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
@@ -51,7 +53,6 @@
     <ClInclude Include="src\renderer\chunkrenderer.h" />
     <ClInclude Include="src\renderer\image.h" />
     <ClInclude Include="src\renderer\irenderercontext.h" />
-    <ClInclude Include="src\rid.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

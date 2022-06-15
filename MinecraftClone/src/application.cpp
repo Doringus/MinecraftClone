@@ -17,7 +17,10 @@
 #include "renderer/bufferlayout.h"
 #include "renderer/camera.h"
 
+#include "game/world/chunk.h"
+
 #include "utils.h"
+#include <noise.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../vendor/stb/stb.h"
@@ -40,22 +43,23 @@ Application::~Application() noexcept {
 }
 
 void Application::run() {
+    
 	m_IsRunning = true;
     spdlog::info("Application started");
     
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
 
+    game::world::chunk_t chunkData = {
+        16,
+        0,
+        0,
+        renderer.createChunkRenderData(),
+        std::vector<uint16_t>(16 * 16 * 16, 0)
+    };
 
-    auto chunk = renderer.createChunkRenderData();
-    chunk->beginChunk();
-
-    chunk->addVertices({
-        {{0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
-        {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{1.0f, 0.0f, 0.0f}, {0.2f, 0.0f}},
-        {{1.0f, 1.0f, 0.0f}, {0.2f, 1.0f}}
-        }, {0, 1, 3, 1, 2, 3});
+    chunkData.blocks[1300] = 1;
+    game::world::createChunkMesh(chunkData);
 
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
     
