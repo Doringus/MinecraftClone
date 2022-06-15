@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <iterator>
 
 #include "../../vendor/glm/vec3.hpp"
 #include "../../vendor/glm/vec2.hpp"
@@ -27,8 +28,15 @@ namespace graphics {
 		public:
 			bool updated() const noexcept;
 			void beginChunk() noexcept;
+			void markUpdated() noexcept;
 			void markFlushedToGPU() noexcept;
-			void addVertices(const std::vector<chunkVertex_t>& vertices, const std::vector<uint16_t>& indices);
+
+			template<typename VBegin, typename VEnd, typename IBegin, typename IEnd>
+			void addVertices(VBegin verticesBegin, VEnd verticesEnd, IBegin indicesBegin, IEnd indicesEnd) {
+				std::copy(verticesBegin, verticesEnd, std::back_inserter(m_Vertices));
+				std::copy(indicesBegin, indicesEnd, std::back_inserter(m_Indices));
+			}
+			
 			std::vector<chunkVertex_t>& getVertices() noexcept;
 			std::vector<uint32_t>& getIndices() noexcept;
 

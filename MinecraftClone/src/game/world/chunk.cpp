@@ -1,6 +1,7 @@
 #include "chunk.h"
 
 #include <algorithm>
+#include <array>
 
 namespace game {
 	namespace world {
@@ -15,28 +16,26 @@ namespace game {
 		};
 
 		void pushQuad(int32_t x, int32_t y, int32_t z, uint16_t type, QuadFace face, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-			renderData->beginChunk();
-
-			 std::vector<graphics::chunkVertex_t> leftRightVertices = {
-				{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 1.0f + y, 1.0f + z}, {0.0f, 1.0f}}, // top-left front
-				{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 0.0f + y, 1.0f + z}, {0.0f, 0.0f}}, // bottom-left front
-				{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 0.0f + y, 0.0f + z}, {0.2f, 0.0f}}, // bottom-left back
-				{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 1.0f + y, 0.0f + z}, {0.2f, 1.0f}} // top-left back
+			std::array<graphics::chunkVertex_t, 4> leftRightVertices = {
+				graphics::chunkVertex_t{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 1.0f + y, 1.0f + z}, {0.0f, 1.0f}}, // top-left front
+				graphics::chunkVertex_t{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 0.0f + y, 1.0f + z}, {0.0f, 0.0f}}, // bottom-left front
+				graphics::chunkVertex_t{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 0.0f + y, 0.0f + z}, {0.2f, 0.0f}}, // bottom-left back
+				graphics::chunkVertex_t{{0.0f + x + (face == QuadFace::Right ? 1 : 0), 1.0f + y, 0.0f + z}, {0.2f, 1.0f}} // top-left back
 			};
-			std::vector<graphics::chunkVertex_t> bottomTopVertices = {
-				{{0.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 1.0f + z}, {0.0f, 0.0f}}, // bottom-left front
-				{{1.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 1.0f + z}, {0.2f, 0.0f}}, // bottom-right front
-				{{1.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 0.0f + z}, {0.2f, 1.0f}}, // bottom-right back
-				{{0.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 0.0f + z}, {0.0f, 1.0f}} // bottom-left back
+			std::array<graphics::chunkVertex_t, 4> bottomTopVertices = {
+				graphics::chunkVertex_t{{ 0.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 1.0f + z }, {0.0f, 0.0f}}, // bottom-left front
+				graphics::chunkVertex_t{{ 1.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 1.0f + z }, {0.2f, 0.0f}}, // bottom-right front
+				graphics::chunkVertex_t{{ 1.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 0.0f + z }, {0.2f, 1.0f}}, // bottom-right back
+				graphics::chunkVertex_t{{ 0.0f + x, 0.0f + y + (face == QuadFace::Top ? 1 : 0), 0.0f + z }, {0.0f, 1.0f}} // bottom-left back
 			};
-			std::vector<graphics::chunkVertex_t> backFrontVertices = {
-				{{0.0f + x, 1.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.0f, 1.0f}}, // top-left back
-				{{0.0f + x, 0.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.0f, 0.0f}}, // bottom-left back
-				{{1.0f + x, 0.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.2f, 0.0f}}, // bottomright back
-				{{1.0f + x, 1.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.2f, 1.0f}} // top-right back
+			std::array<graphics::chunkVertex_t, 4> backFrontVertices = {
+				graphics::chunkVertex_t{{0.0f + x, 1.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.0f, 1.0f}}, // top-left back
+				graphics::chunkVertex_t{{0.0f + x, 0.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.0f, 0.0f}}, // bottom-left back
+				graphics::chunkVertex_t{{1.0f + x, 0.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.2f, 0.0f}}, // bottomright back
+				graphics::chunkVertex_t{{1.0f + x, 1.0f + y, 0.0f + z + (face == QuadFace::Front ? 1 : 0)}, {0.2f, 1.0f}} // top-right back
 			};
 
-			std::vector<uint16_t> indicesTemplate = {
+			std::array<uint16_t, 6> indicesTemplate = {
 				0, 1, 3,
 				1, 2, 3
 			};
@@ -45,25 +44,25 @@ namespace game {
 			});
 
 			if (face == QuadFace::Top || face == QuadFace::Bottom) {
-				renderData->addVertices(bottomTopVertices, indicesTemplate);
+				renderData->addVertices(bottomTopVertices.begin(), bottomTopVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
 			}
 			else if (face == QuadFace::Left || face == QuadFace::Right) {
-				renderData->addVertices(leftRightVertices, indicesTemplate);
+				renderData->addVertices(leftRightVertices.begin(), leftRightVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
 			}
 			else if (face == QuadFace::Front || face == QuadFace::Back) {
-				renderData->addVertices(backFrontVertices, indicesTemplate);
+				renderData->addVertices(backFrontVertices.begin(), backFrontVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
 			}
 		}
 
 		void createChunkMesh(chunk_t& chunk) {
 			/* Simple culling algorithm */
+			chunk.renderData->beginChunk();
 			for (size_t x = 0; x < chunk.size; ++x) {
 				for (size_t y = 0; y < chunk.size; ++y) {
 					for (size_t z = 0; z < chunk.size; ++z) {
 						if (chunk.blocks[get1DimIndex(x, y, z, chunk.size)] == 0) {
 							continue;
 						}
-
 						//left
 						if (x > 0 && !chunk.blocks[get1DimIndex(x - 1, y, z, chunk.size)]) {
 							pushQuad(x, y, z, 1, QuadFace::Left, chunk.renderData);
@@ -88,11 +87,9 @@ namespace game {
 						if (z > 0 && !chunk.blocks[get1DimIndex(x, y, z - 1, chunk.size)]) {
 							pushQuad(x, y, z, 1, QuadFace::Back, chunk.renderData);
 						}
-
 					}
 				}
 			}
 		}
-
 	}
 }
