@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../renderer/chunkrenderer.h"
+#include "blocksdatabase.h"
 
 namespace game {
 	namespace world {
@@ -19,7 +20,7 @@ namespace game {
 			std::vector<uint16_t> blocks;
 		};
 		
-		void createChunkMesh(/*const World&, const ChunkDatabase&,*/chunk_t& chunk);
+		void createChunkMesh(/*const World&,*/const BlocksDatabase& blocksDatabase, chunk_t& chunk);
 
 	}
 }

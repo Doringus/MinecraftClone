@@ -59,7 +59,20 @@ void Application::run() {
     };
 
     chunkData.blocks[1300] = 1;
-    game::world::createChunkMesh(chunkData);
+    chunkData.blocks[1301] = 1;
+    game::world::BlocksMap blocksMap;
+    game::world::blockTextureFormat_t tree{
+    game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}} // bottom
+    };
+    blocksMap[1] = tree;
+
+    game::world::BlocksDatabase blockDatabase(blocksMap);
+    game::world::createChunkMesh(blockDatabase, chunkData);
 
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
     
