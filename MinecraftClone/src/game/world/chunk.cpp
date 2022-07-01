@@ -168,41 +168,35 @@ namespace game {
 		void createChunkMesh(const BlocksDatabase& blocksDatabase, chunk_t& chunk) {
 			/* Simple culling algorithm */
 			chunk.renderData->beginChunk();
-			for (size_t x = 0; x < chunk.size; ++x) {
-				for (size_t y = 0; y < chunk.size; ++y) {
-					for (size_t z = 0; z < chunk.size; ++z) {
-						if (chunk.blocks[get1DimIndex(x, y, z, chunk.size)] == 0) {
+			for (size_t x = 0; x < chunk.box.width; ++x) {
+				for (size_t y = 0; y < chunk.box.height; ++y) {
+					for (size_t z = 0; z < chunk.box.depth; ++z) {
+						if (chunk.blocks.get(x, y, z) == 0) {
 							continue;
 						}
 						//left
-						if (x > 0 && !chunk.blocks[get1DimIndex(x - 1, y, z, chunk.size)]) {
-							addLeftFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks[get1DimIndex(x, y, z, chunk.size)]).left, chunk.renderData);
-						//	pushQuad(x, y, z, 1, QuadFace::Left, chunk.renderData);
+						if (x > 0 && !chunk.blocks.get(x - 1, y, z)) {
+							addLeftFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).left, chunk.renderData);
 						}
 						//right
-						if (x < chunk.size - 1 && !chunk.blocks[get1DimIndex(x + 1, y, z, chunk.size)]) {
-							addRightFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks[get1DimIndex(x, y, z, chunk.size)]).right, chunk.renderData);
-							//pushQuad(x, y, z, 1, QuadFace::Right, chunk.renderData);
+						if (x < chunk.box.width - 1 && !chunk.blocks.get(x + 1, y, z)) {
+							addRightFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).right, chunk.renderData);
 						}
 						//top
-						if (y < chunk.size - 1 && !chunk.blocks[get1DimIndex(x, y + 1, z, chunk.size)]) {
-							addTopFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks[get1DimIndex(x, y, z, chunk.size)]).top, chunk.renderData);
-							//pushQuad(x, y, z, 1, QuadFace::Top, chunk.renderData);
+						if (y < chunk.box.height - 1 && !chunk.blocks.get(x, y + 1, z)) {
+							addTopFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).top, chunk.renderData);
 						}
 						// bottom
-						if (y > 0 && !chunk.blocks[get1DimIndex(x, y - 1, z, chunk.size)]) {
-							addBottomFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks[get1DimIndex(x, y, z, chunk.size)]).bottom, chunk.renderData);
-							//pushQuad(x, y, z, 1, QuadFace::Bottom, chunk.renderData);
+						if (y > 0 && !chunk.blocks.get(x, y - 1, z)) {
+							addBottomFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).bottom, chunk.renderData);
 						}
 						//front
-						if (z < chunk.size - 1 && !chunk.blocks[get1DimIndex(x, y, z + 1, chunk.size)]) {
-							addFrontFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks[get1DimIndex(x, y, z, chunk.size)]).front, chunk.renderData);
-							//pushQuad(x, y, z, 1, QuadFace::Front, chunk.renderData);
+						if (z < chunk.box.depth - 1 && !chunk.blocks.get(x, y, z + 1)) {
+							addFrontFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).front, chunk.renderData);
 						}
 						//back
-						if (z > 0 && !chunk.blocks[get1DimIndex(x, y, z - 1, chunk.size)]) {
-							addBackFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks[get1DimIndex(x, y, z, chunk.size)]).back, chunk.renderData);
-							//pushQuad(x, y, z, 1, QuadFace::Back, chunk.renderData);
+						if (z > 0 && !chunk.blocks.get(x, y, z - 1)) {
+							addBackFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).back, chunk.renderData);
 						}
 					}
 				}

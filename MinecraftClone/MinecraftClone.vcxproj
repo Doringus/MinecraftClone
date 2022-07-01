@@ -14,6 +14,7 @@
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\game\world\blocksdatabase.cpp" />
     <ClCompile Include="src\game\world\chunk.cpp" />
+    <ClCompile Include="src\game\world\dummyworldgenerator.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
@@ -37,12 +38,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
+    <ClInclude Include="src\container3d.h" />
     <ClInclude Include="src\game\world\blocksdatabase.h" />
     <ClInclude Include="src\game\world\chunk.h" />
+    <ClInclude Include="src\game\world\dummyworldgenerator.h" />
+    <ClInclude Include="src\game\world\iworldgenerator.h" />
     <ClInclude Include="src\platform\glfw\input.h" />
     <ClInclude Include="src\iwindow.h" />
     <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
     <ClInclude Include="src\platform\glfw\glfwwindow.h" />
+    <ClInclude Include="src\platform\renderer\opengl\base\debug.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglindexbuffer.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglshader.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglchunkrenderer.h" />
@@ -115,7 +120,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SPDLOG_USE_STD_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\glfw\include;..\Dependencies\glew\include;..\Dependencies\libnoise\include;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoiseLite;E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoise2\include;..\Dependencies\glfw\include;..\Dependencies\glew\include;..\Dependencies\libnoise\include;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -123,8 +128,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\lib;..\Dependencies\glfw\lib;..\Dependencies\glew\lib;..\Dependencies\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;libnoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoise2\lib;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\lib;..\Dependencies\glfw\lib;..\Dependencies\glew\lib;..\Dependencies\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

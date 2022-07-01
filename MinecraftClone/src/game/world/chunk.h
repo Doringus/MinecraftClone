@@ -4,20 +4,31 @@
 
 #include "../../renderer/chunkrenderer.h"
 #include "blocksdatabase.h"
+#include "../../container3d.h"
 
 namespace game {
 	namespace world {
+		
+		constexpr int64_t get1DimChunkIndex(int64_t x, int64_t y, int64_t z, size_t height, size_t width) {
+			return(z * height * width + y * width + x);
+		}
 
 		constexpr int64_t get1DimIndex(int64_t x, int64_t y, int64_t z, size_t dimensionSize) {
 			return(z * dimensionSize * dimensionSize + y * dimensionSize + x);
 		}
 
-		struct chunk_t {
-			size_t size;
+		struct chunkBox_t {
 			int64_t xGrid;
 			int64_t yGrid;
+			size_t width;
+			size_t height;
+			size_t depth;
+		};
+
+		struct chunk_t {
+			chunkBox_t box;
+			utils::Container3d<uint16_t> blocks;
 			graphics::ChunkRenderer::ChunkRenderData* renderData; /// non-owning ptr
-			std::vector<uint16_t> blocks;
 		};
 		
 		void createChunkMesh(/*const World&,*/const BlocksDatabase& blocksDatabase, chunk_t& chunk);

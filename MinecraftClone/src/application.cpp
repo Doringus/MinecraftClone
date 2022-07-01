@@ -20,7 +20,8 @@
 #include "game/world/chunk.h"
 
 #include "utils.h"
-#include <noise.h>
+
+#include <FastNoiseLite.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../vendor/stb/stb.h"
@@ -46,22 +47,31 @@ void Application::run() {
     
 	m_IsRunning = true;
     spdlog::info("Application started");
-    
+    FastNoiseLite noise(1337);
+    noise.SetNoiseType(FastNoiseLite::NoiseType_Cellular);
+    noise.SetCellularReturnType(FastNoiseLite::CellularReturnType_CellValue);
+
+    for (float i = 0; i < 240; i += 1) {
+        std::cout << noise.GetNoise(i, 0.0f) << "\n";
+    }
+
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
 
     game::world::chunk_t chunkData = {
-        16,
-        0,
-        0,
+        {
+            0, 0, 16, 256, 16
+        },
+        utils::Container3d<uint16_t>(16, 256, 16),
         renderer.createChunkRenderData(),
-        std::vector<uint16_t>(16 * 16 * 16, 0)
     };
+    
+    chunkData.blocks.get(1, 1, 1) = 1;
+    chunkData.blocks.get(1, 1, 2) = 1;
+    chunkData.blocks.get(1, 1, 3) = 1;
 
-    chunkData.blocks[1300] = 1;
-    chunkData.blocks[1301] = 1;
     game::world::BlocksMap blocksMap;
-    game::world::blockTextureFormat_t tree{
+    game::world::blockTextureFormat_t tree {
     game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // front
     game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // back
     game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // left
@@ -69,7 +79,25 @@ void Application::run() {
     game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, //top
     game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}} // bottom
     };
+    game::world::blockTextureFormat_t grass {
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}} // bottom
+    };
+    game::world::blockTextureFormat_t dirt {
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}} // bottom
+    };
     blocksMap[1] = tree;
+    blocksMap[2] = grass;
+    blocksMap[3] = dirt;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::createChunkMesh(blockDatabase, chunkData);
