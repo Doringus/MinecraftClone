@@ -6,6 +6,7 @@
 
 #include "../../vendor/glm/vec3.hpp"
 #include "../../vendor/glm/vec2.hpp"
+#include "../../vendor/glm/mat4x4.hpp"
 
 namespace graphics {
 
@@ -40,10 +41,14 @@ namespace graphics {
 			std::vector<chunkVertex_t>& getVertices() noexcept;
 			std::vector<uint32_t>& getIndices() noexcept;
 
+			void setModelMatrix(const glm::mat4& matrix) noexcept;
+			glm::mat4 getModelMatrix() const noexcept;
+
 		private:
 			bool m_IsUpdated = true;
 			std::vector<chunkVertex_t> m_Vertices;
 			std::vector<uint32_t> m_Indices;
+			glm::mat4 m_ModelMatrix;
 		};
 
 	public:

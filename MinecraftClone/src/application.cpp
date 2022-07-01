@@ -18,6 +18,7 @@
 #include "renderer/camera.h"
 
 #include "game/world/chunk.h"
+#include "game/world/dummyworldgenerator.h"
 
 #include "utils.h"
 
@@ -47,28 +48,37 @@ void Application::run() {
     
 	m_IsRunning = true;
     spdlog::info("Application started");
-    FastNoiseLite noise(1337);
-    noise.SetNoiseType(FastNoiseLite::NoiseType_Cellular);
-    noise.SetCellularReturnType(FastNoiseLite::CellularReturnType_CellValue);
 
-    for (float i = 0; i < 240; i += 1) {
-        std::cout << noise.GetNoise(i, 0.0f) << "\n";
-    }
 
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
 
+
+    auto chunkRenderData = renderer.createChunkRenderData();
+    chunkRenderData->setModelMatrix(glm::mat4(1.0f));
     game::world::chunk_t chunkData = {
         {
             0, 0, 16, 256, 16
         },
         utils::Container3d<uint16_t>(16, 256, 16),
-        renderer.createChunkRenderData(),
+        chunkRenderData,
+    };
+
+    auto chunkRenderData1 = renderer.createChunkRenderData();
+    chunkRenderData1->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(16, 0, 0)));
+    game::world::chunk_t chunkData1 = {
+       {
+           1, 0, 16, 256, 16
+       },
+       utils::Container3d<uint16_t>(16, 256, 16),
+       chunkRenderData1,
     };
     
-    chunkData.blocks.get(1, 1, 1) = 1;
-    chunkData.blocks.get(1, 1, 2) = 1;
-    chunkData.blocks.get(1, 1, 3) = 1;
+    game::world::DummyWorldGenerator generator({ 1337, 1338, 1333 }, {});
+    chunkData.blocks = generator.createChunk(chunkData.box);
+    chunkData1.blocks = generator.createChunk(chunkData1.box);
+   // chunkData.blocks.get(1, 1, 1) = 1;
+   // chunkData1.blocks.get(1, 1, 1) = 1;
 
     game::world::BlocksMap blocksMap;
     game::world::blockTextureFormat_t tree {
@@ -101,8 +111,9 @@ void Application::run() {
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::createChunkMesh(blockDatabase, chunkData);
+    game::world::createChunkMesh(blockDatabase, chunkData1);
 
-    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
+    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
     
     double dt = 1.0 / 60.0;
     double beginTicks = glfwGetTimerValue();
@@ -110,8 +121,8 @@ void Application::run() {
     while (m_Window->isOpen()) {
         m_Window->pollEvents();
 
-        spdlog::info("Frame time {0}ms", dt * 1000);
-
+       // spdlog::info("Frame time {0}ms", dt * 1000);
+        spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
         m_Input->update();
         camera.update(*m_Input, dt);
         context.clearScreen(0.2, 0.2, 0.2, 1.0);

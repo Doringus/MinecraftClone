@@ -27,4 +27,12 @@ namespace graphics {
 		return m_Indices;
 	}
 
+	void ChunkRenderer::ChunkRenderData::setModelMatrix(const glm::mat4& matrix) noexcept {
+		m_ModelMatrix = matrix;
+	}
+
+	glm::mat4 ChunkRenderer::ChunkRenderData::getModelMatrix() const noexcept {
+		return m_ModelMatrix;
+	}
+
 }
