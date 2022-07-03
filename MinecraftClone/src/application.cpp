@@ -77,8 +77,7 @@ void Application::run() {
     game::world::DummyWorldGenerator generator({ 1337, 1338, 1333 }, {});
     chunkData.blocks = generator.createChunk(chunkData.box);
     chunkData1.blocks = generator.createChunk(chunkData1.box);
-   // chunkData.blocks.get(1, 1, 1) = 1;
-   // chunkData1.blocks.get(1, 1, 1) = 1;
+
 
     game::world::BlocksMap blocksMap;
     game::world::blockTextureFormat_t tree {
@@ -97,7 +96,7 @@ void Application::run() {
     game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, //top
     game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}} // bottom
     };
-    game::world::blockTextureFormat_t dirt {
+    game::world::blockTextureFormat_t dirt {    
     game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // front
     game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // back
     game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // left

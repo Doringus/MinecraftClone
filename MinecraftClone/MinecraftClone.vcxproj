@@ -15,6 +15,7 @@
     <ClCompile Include="src\game\world\blocksdatabase.cpp" />
     <ClCompile Include="src\game\world\chunk.cpp" />
     <ClCompile Include="src\game\world\dummyworldgenerator.cpp" />
+    <ClCompile Include="src\game\world\terrainmanager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="src\game\world\chunk.h" />
     <ClInclude Include="src\game\world\dummyworldgenerator.h" />
     <ClInclude Include="src\game\world\iworldgenerator.h" />
+    <ClInclude Include="src\game\world\terrainmanager.h" />
     <ClInclude Include="src\platform\glfw\input.h" />
     <ClInclude Include="src\iwindow.h" />
     <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
