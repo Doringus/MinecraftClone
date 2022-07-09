@@ -28,8 +28,8 @@
     <ClCompile Include="src\platform\renderer\opengl\base\opengltexture.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\openglvertexbuffer.cpp" />
     <ClCompile Include="src\renderer\camera.cpp" />
-    <ClCompile Include="src\renderer\chunkrenderer.cpp" />
     <ClCompile Include="src\renderer\image.cpp" />
+    <ClCompile Include="src\renderer\renderitem.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +65,8 @@
     <ClInclude Include="src\renderer\igpubuffer.h" />
     <ClInclude Include="src\renderer\image.h" />
     <ClInclude Include="src\renderer\irenderercontext.h" />
+    <ClInclude Include="src\renderer\renderitem.h" />
+    <ClInclude Include="src\renderer\skyboxrenderer.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

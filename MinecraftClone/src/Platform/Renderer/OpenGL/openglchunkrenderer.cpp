@@ -10,11 +10,11 @@ namespace graphics::opengl {
 		m_GpuBufferManager = std::make_unique<OpenglGpuBufferManager>();
 	}
 
-	std::shared_ptr<ChunkRenderer::ChunkRenderData> OpenglChunkRenderer::createChunkRenderData() {
-		return std::make_shared<ChunkRenderer::ChunkRenderData>(m_GpuBufferManager->createVertexBuffer(sizeof(chunkVertex_t)), m_GpuBufferManager->createIndexBuffer());
+	std::shared_ptr<RenderItem> OpenglChunkRenderer::createChunkRenderData() {
+		return std::make_shared<RenderItem>(m_GpuBufferManager->createVertexBuffer(sizeof(chunkVertex_t)), m_GpuBufferManager->createIndexBuffer());
 	}
 
-	void OpenglChunkRenderer::submit(const std::shared_ptr<ChunkRenderData>& chunk) {
+	void OpenglChunkRenderer::submit(const std::shared_ptr<RenderItem>& chunk) {
 		m_ChunksToRender.push_back(chunk);
 	}
 
@@ -28,5 +28,6 @@ namespace graphics::opengl {
 			static_cast<OpenglVertexBuffer*>(renderable->getVertexBuffer())->bind(m_ChunkVao.getId());
 			glDrawElements(GL_TRIANGLES, renderable->getIndexBuffer()->elementsCount(), GL_UNSIGNED_INT, 0);
 		}
+		m_ChunksToRender.clear();
 	}
 }

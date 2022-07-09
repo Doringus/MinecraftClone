@@ -10,6 +10,7 @@
 
 #include "igpubuffer.h"
 #include "igpubuffermanager.h"
+#include "renderitem.h"
 
 namespace graphics {
 
@@ -19,39 +20,12 @@ namespace graphics {
 	};
 
 	
-
-	class ChunkRenderData {
-	public:
-		void setModelMatrix(const glm::mat4& matrix) noexcept;
-		glm::mat4 getModelMatrix() const noexcept;
-	private:
-		
-	};
-	
 	class Camera;
 
 	class ChunkRenderer {
 	public:
-
-		class ChunkRenderData {
-		public:
-			ChunkRenderData(std::unique_ptr<IGpuBuffer> vertexBuffer, std::unique_ptr<IGpuBuffer> indexBuffer);
-
-			IGpuBuffer* getVertexBuffer() noexcept;
-			IGpuBuffer* getIndexBuffer() noexcept;
-
-			void setModelMatrix(const glm::mat4& matrix) noexcept;
-			glm::mat4 getModelMatrix() const noexcept;
-
-		private:
-			std::unique_ptr<IGpuBuffer> m_VertexBuffer;
-			std::unique_ptr<IGpuBuffer> m_IndexBuffer;
-			glm::mat4 m_ModelMatrix;
-		};
-
-	public:
-		virtual std::shared_ptr<ChunkRenderData> createChunkRenderData() = 0;
-		virtual void submit(const std::shared_ptr<ChunkRenderData>& chunk) = 0;
+		virtual std::shared_ptr<RenderItem> createChunkRenderData() = 0;
+		virtual void submit(const std::shared_ptr<RenderItem>& chunk) = 0;
 		virtual void render(const Camera& camera) = 0;
 	protected:
 		std::unique_ptr<IGpuBufferManager> m_GpuBufferManager;

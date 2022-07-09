@@ -19,12 +19,12 @@ namespace graphics {
 		public:
 			OpenglChunkRenderer() noexcept;
 
-			std::shared_ptr<ChunkRenderData> createChunkRenderData() override;
-			void submit(const std::shared_ptr<ChunkRenderData>& chunk) override;
+			std::shared_ptr<RenderItem> createChunkRenderData() override;
+			void submit(const std::shared_ptr<RenderItem>& chunk) override;
 			void render(const Camera& camera) override;
 
 		private:
-			std::vector<std::shared_ptr<ChunkRenderData>> m_ChunksToRender;
+			std::vector<std::shared_ptr<RenderItem>> m_ChunksToRender;
 
 			OpenglInputLayout m_ChunkVao = OpenglInputLayout({
 					{"position", graphics::ShaderDataType::FLOAT3, 3},

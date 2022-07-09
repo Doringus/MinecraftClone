@@ -126,7 +126,7 @@ void Application::run() {
     
     double dt = 1.0 / 60.0;
     double beginTicks = glfwGetTimerValue();
-    renderer.submit(chunkData.renderData);
+    
     while (m_Window->isOpen()) {
         m_Window->pollEvents();
 
@@ -136,6 +136,9 @@ void Application::run() {
         camera.update(*m_Input, dt);
         context.clearScreen(0.2, 0.2, 0.2, 1.0);
         context.clearFramebuffer();
+
+        renderer.submit(chunkData.renderData);
+
         renderer.render(camera);
 
         m_Window->swapBuffers();
