@@ -53,7 +53,17 @@ void Application::run() {
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
 
+    auto chunkRenderData = renderer.createChunkRenderData();
+    chunkRenderData->setModelMatrix(glm::mat4(1.0f));
+    game::world::chunk_t chunkData = {
+        {
+            0, 0, 16, 256, 16
+        },
+        utils::Container3d<uint16_t>(16, 256, 16),
+        chunkRenderData,
+    };
 
+    /*
     auto chunkRenderData = renderer.createChunkRenderData();
     chunkRenderData->setModelMatrix(glm::mat4(1.0f));
     game::world::chunk_t chunkData = {
@@ -73,10 +83,10 @@ void Application::run() {
        utils::Container3d<uint16_t>(16, 256, 16),
        chunkRenderData1,
     };
-    
+    */
     game::world::DummyWorldGenerator generator({ 1337, 1338, 1333 }, {});
     chunkData.blocks = generator.createChunk(chunkData.box);
-    chunkData1.blocks = generator.createChunk(chunkData1.box);
+   // chunkData1.blocks = generator.createChunk(chunkData1.box);
 
 
     game::world::BlocksMap blocksMap;
@@ -110,13 +120,13 @@ void Application::run() {
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::createChunkMesh(blockDatabase, chunkData);
-    game::world::createChunkMesh(blockDatabase, chunkData1);
+   // game::world::createChunkMesh(blockDatabase, chunkData1);
 
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
     
     double dt = 1.0 / 60.0;
     double beginTicks = glfwGetTimerValue();
-
+    renderer.submit(chunkData.renderData);
     while (m_Window->isOpen()) {
         m_Window->pollEvents();
 

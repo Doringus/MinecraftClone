@@ -2,16 +2,14 @@
 
 #include "../../../renderer/irenderercontext.h"
 
-namespace graphics {
-	namespace opengl {
+namespace graphics::opengl {
 
-		class OpenglRendererContext : public IRendererContext {
-		public:
-			OpenglRendererContext();
+	class OpenglRendererContext : public IRendererContext {
+	public:
+		OpenglRendererContext();
 
-			void clearScreen(float r, float g, float b, float alpha);
-			void clearFramebuffer();
-		};
+		void clearScreen(float r, float g, float b, float alpha);
+		void clearFramebuffer();
+	};
 
-	}
 }

@@ -6,25 +6,23 @@
 
 #include <spdlog/spdlog.h>
 
-namespace graphics {
-	namespace opengl {
+namespace graphics::opengl {
 
-		OpenglRendererContext::OpenglRendererContext() {
-			glewExperimental = GL_TRUE;
-			GLenum      err;
-			if ((err = glewInit()) != GLEW_OK) {
-				spdlog::critical("Failed to init glew!!!");
-			}
-			glEnable(GL_DEPTH_TEST);
+	OpenglRendererContext::OpenglRendererContext() {
+		glewExperimental = GL_TRUE;
+		GLenum      err;
+		if ((err = glewInit()) != GLEW_OK) {
+			spdlog::critical("Failed to init glew!!!");
 		}
-
-		void OpenglRendererContext::clearScreen(float r, float g, float b, float alpha) {
-			glClearColor(r, g, b, alpha);
-		}
-
-		void OpenglRendererContext::clearFramebuffer() {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
-
+		glEnable(GL_DEPTH_TEST);
 	}
+
+	void OpenglRendererContext::clearScreen(float r, float g, float b, float alpha) {
+		glClearColor(r, g, b, alpha);
+	}
+
+	void OpenglRendererContext::clearFramebuffer() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
 }

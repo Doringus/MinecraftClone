@@ -27,7 +27,7 @@ namespace game::world {
 	struct chunk_t {
 		chunkBox_t box;
 		utils::Container3d<uint16_t> blocks;
-		graphics::ChunkRenderer::ChunkRenderData* renderData; /// non-owning ptr
+		std::shared_ptr<graphics::ChunkRenderer::ChunkRenderData> renderData;
 	};
 		
 	void createChunkMesh(/*const World&,*/const BlocksDatabase& blocksDatabase, chunk_t& chunk);

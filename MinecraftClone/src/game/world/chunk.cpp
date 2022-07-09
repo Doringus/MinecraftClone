@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <array>
 
+#include "../../renderer/igpubuffer.h"
+
 namespace game::world {
 
 	enum class QuadFace {
@@ -14,120 +16,62 @@ namespace game::world {
 		Back
 	};
 
-	void addFrontFace(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-		std::array<graphics::chunkVertex_t, 4> frontVertices = {
-			graphics::chunkVertex_t{{0.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topLeft}, // top-left front
-			graphics::chunkVertex_t{{0.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomLeft}, // bottom-left front
-			graphics::chunkVertex_t{{1.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomRight}, // bottom-right front
-			graphics::chunkVertex_t{{1.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topRight} // top-right front
-		};
-
+	void addIndices(std::vector<unsigned int>& indices, size_t verticesSize) {
 		std::array<uint16_t, 6> indicesTemplate = {
-			0, 1, 3,
-			1, 2, 3
+				0, 1, 3,
+				1, 2, 3
 		};
-		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [renderData](uint16_t& value) {
-			value += renderData->getVertices().size();
-			});
-		renderData->addVertices(frontVertices.begin(), frontVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
+		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [&indices, verticesSize](uint16_t& value) {
+			indices.push_back(value + verticesSize);
+		});
 	}
 
-	void addBackFace(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-		std::array<graphics::chunkVertex_t, 4> backVertices = {
-			graphics::chunkVertex_t{{0.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topLeft}, // top-left back
-			graphics::chunkVertex_t{{0.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomLeft}, // bottom-left back
-			graphics::chunkVertex_t{{1.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomRight}, // bottom-right back
-			graphics::chunkVertex_t{{1.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topRight} // top-right back
-		};
-
-		std::array<uint16_t, 6> indicesTemplate = {
-			0, 1, 3,
-			1, 2, 3
-		};
-		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [renderData](uint16_t& value) {
-			value += renderData->getVertices().size();
-			});
-
-		renderData->addVertices(backVertices.begin(), backVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
+	void addFrontFaceVertices(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, std::vector<graphics::chunkVertex_t>& vertices) {
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topLeft });
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomLeft });
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomRight });
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topRight });
 	}
 
-	void addLeftFace(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-		std::array<graphics::chunkVertex_t, 4> leftVertices = {
-			graphics::chunkVertex_t{{0.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topLeft}, // top-left back
-			graphics::chunkVertex_t{{0.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomLeft}, // bottom-left back
-			graphics::chunkVertex_t{{0.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomRight}, // bottom-left front
-			graphics::chunkVertex_t{{0.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topRight} // top-left front
-		};
-
-		std::array<uint16_t, 6> indicesTemplate = {
-			0, 1, 3,
-			1, 2, 3
-		};
-		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [renderData](uint16_t& value) {
-			value += renderData->getVertices().size();
-			});
-
-		renderData->addVertices(leftVertices.begin(), leftVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
+	void addBackFaceVertices(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, std::vector<graphics::chunkVertex_t>& vertices) {
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topLeft }); // top-left back
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomLeft }); // bottom-left back
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomRight }); // bottom-right back
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topRight }); // top-right back
 	}
 
-	void addRightFace(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-		std::array<graphics::chunkVertex_t, 4> rightVertices = {
-			graphics::chunkVertex_t{{1.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topLeft}, // top-right back
-			graphics::chunkVertex_t{{1.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomLeft}, // bottom-right back
-			graphics::chunkVertex_t{{1.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomRight}, // bottom-right front
-			graphics::chunkVertex_t{{1.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topRight} // top-rigth front
-		};
-
-		std::array<uint16_t, 6> indicesTemplate = {
-			0, 1, 3,
-			1, 2, 3
-		};
-		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [renderData](uint16_t& value) {
-			value += renderData->getVertices().size();
-			});
-
-		renderData->addVertices(rightVertices.begin(), rightVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
+	void addLeftFaceVertices(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, std::vector<graphics::chunkVertex_t>& vertices) {
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topLeft }); // top-left back
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomLeft }); // bottom-left back
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomRight }); // bottom-left front
+		vertices.push_back(graphics::chunkVertex_t{ {0.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topRight }); // top-left front
 	}
 
-	void addTopFace(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-		std::array<graphics::chunkVertex_t, 4> topVertices = {
-			graphics::chunkVertex_t{{ 0.0f + x, 1.0f + y, 0.0f + z }, textureFormat.topLeft}, // top-left back
-			graphics::chunkVertex_t{{ 1.0f + x, 1.0f + y, 0.0f + z }, textureFormat.bottomLeft}, // top-right back
-			graphics::chunkVertex_t{{ 1.0f + x, 1.0f + y, 1.0f + z }, textureFormat.bottomRight}, // top-right front
-			graphics::chunkVertex_t{{ 0.0f + x, 1.0f + y, 1.0f + z }, textureFormat.topRight} // top-left front
-		};
-
-		std::array<uint16_t, 6> indicesTemplate = {
-			0, 1, 3,
-			1, 2, 3
-		};
-		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [renderData](uint16_t& value) {
-			value += renderData->getVertices().size();
-			});
-		renderData->addVertices(topVertices.begin(), topVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
+	void addRightFaceVertices(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, std::vector<graphics::chunkVertex_t>& vertices) {
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 1.0f + y, 0.0f + z}, textureFormat.topLeft }); // top-right back
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 0.0f + y, 0.0f + z}, textureFormat.bottomLeft }); // bottom-right back
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 0.0f + y, 1.0f + z}, textureFormat.bottomRight }); // bottom-right front
+		vertices.push_back(graphics::chunkVertex_t{ {1.0f + x, 1.0f + y, 1.0f + z}, textureFormat.topRight }); // top-rigth front
 	}
 
-	void addBottomFace(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, graphics::ChunkRenderer::ChunkRenderData* renderData) {
-		std::array<graphics::chunkVertex_t, 4> bottomVertices = {
-			graphics::chunkVertex_t{{ 0.0f + x, 0.0f + y, 0.0f + z }, textureFormat.topLeft}, // bottom-left back
-			graphics::chunkVertex_t{{ 1.0f + x, 0.0f + y, 0.0f + z }, textureFormat.bottomLeft}, // bottom-right back
-			graphics::chunkVertex_t{{ 1.0f + x, 0.0f + y, 1.0f + z }, textureFormat.bottomRight}, // bottom-right front
-			graphics::chunkVertex_t{{ 0.0f + x, 0.0f + y, 1.0f + z }, textureFormat.topRight} // bottom-left front
-		};
+	void addTopFaceVertices(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, std::vector<graphics::chunkVertex_t>& vertices) {
+		vertices.push_back(graphics::chunkVertex_t{ { 0.0f + x, 1.0f + y, 0.0f + z }, textureFormat.topLeft }); // top-left back
+		vertices.push_back(graphics::chunkVertex_t{ { 1.0f + x, 1.0f + y, 0.0f + z }, textureFormat.bottomLeft }); // top-right back
+		vertices.push_back(graphics::chunkVertex_t{ { 1.0f + x, 1.0f + y, 1.0f + z }, textureFormat.bottomRight }); // top-right front
+		vertices.push_back(graphics::chunkVertex_t{ { 0.0f + x, 1.0f + y, 1.0f + z }, textureFormat.topRight }); // top-left front
+	}
 
-		std::array<uint16_t, 6> indicesTemplate = {
-			0, 1, 3,
-			1, 2, 3
-		};
-		std::for_each(indicesTemplate.begin(), indicesTemplate.end(), [renderData](uint16_t& value) {
-			value += renderData->getVertices().size();
-			});
-		renderData->addVertices(bottomVertices.begin(), bottomVertices.end(), indicesTemplate.begin(), indicesTemplate.end());
+	void addBottomFaceVertices(int32_t x, int32_t y, int32_t z, const blockFaceTextureFormat_t& textureFormat, std::vector<graphics::chunkVertex_t>& vertices) {
+		vertices.push_back(graphics::chunkVertex_t{ { 0.0f + x, 0.0f + y, 0.0f + z }, textureFormat.topLeft }); // bottom-left back
+		vertices.push_back(graphics::chunkVertex_t{ { 1.0f + x, 0.0f + y, 0.0f + z }, textureFormat.bottomLeft }); // bottom-right back
+		vertices.push_back(graphics::chunkVertex_t{ { 1.0f + x, 0.0f + y, 1.0f + z }, textureFormat.bottomRight }); // bottom-right front
+		vertices.push_back(graphics::chunkVertex_t{ { 0.0f + x, 0.0f + y, 1.0f + z }, textureFormat.topRight }); // bottom-left front
 	}
 
 	void createChunkMesh(const BlocksDatabase& blocksDatabase, chunk_t& chunk) {
 		/* Simple culling algorithm */
-		chunk.renderData->beginChunk();
+		std::vector<graphics::chunkVertex_t> vertices;
+		std::vector<unsigned int> indices;
 		for (size_t x = 0; x < chunk.box.width; ++x) {
 			for (size_t y = 0; y < chunk.box.height; ++y) {
 				for (size_t z = 0; z < chunk.box.depth; ++z) {
@@ -136,30 +80,38 @@ namespace game::world {
 					}
 					//left
 					if (x > 0 && !chunk.blocks.get(x - 1, y, z)) {
-						addLeftFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).left, chunk.renderData);
+						addLeftFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).left, vertices);
+						addIndices(indices, vertices.size());
 					}
 					//right
 					if (x < chunk.box.width - 1 && !chunk.blocks.get(x + 1, y, z)) {
-						addRightFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).right, chunk.renderData);
+						addRightFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).right, vertices);
+						addIndices(indices, vertices.size());
 					}
 					//top
 					if (y < chunk.box.height - 1 && !chunk.blocks.get(x, y + 1, z)) {
-						addTopFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).top, chunk.renderData);
+						addTopFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).top, vertices);
+						addIndices(indices, vertices.size());
 					}
 					// bottom
 					if (y > 0 && !chunk.blocks.get(x, y - 1, z)) {
-						addBottomFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).bottom, chunk.renderData);
+						addBottomFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).bottom, vertices);
+						addIndices(indices, vertices.size());
 					}
 					//front
 					if (z < chunk.box.depth - 1 && !chunk.blocks.get(x, y, z + 1)) {
-						addFrontFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).front, chunk.renderData);
+						addFrontFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).front, vertices);
+						addIndices(indices, vertices.size());
 					}
 					//back
 					if (z > 0 && !chunk.blocks.get(x, y, z - 1)) {
-						addBackFace(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).back, chunk.renderData);
+						addBackFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).back, vertices);
+						addIndices(indices, vertices.size());
 					}
 				}
 			}
 		}
+		chunk.renderData->getVertexBuffer()->write(vertices.size() * sizeof(graphics::chunkVertex_t), vertices.data());
+		chunk.renderData->getIndexBuffer()->write(indices.size() * sizeof(unsigned int), indices.data());
 	}
 }

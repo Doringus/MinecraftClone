@@ -3,28 +3,16 @@
 #include "camera.h"
 
 namespace graphics {
-	
-	bool ChunkRenderer::ChunkRenderData::updated() const noexcept {
-		return m_IsUpdated;
-	}
-	void ChunkRenderer::ChunkRenderData::beginChunk() noexcept {
-		m_Vertices.clear();
-		m_Indices.clear();
-		m_IsUpdated = true;
-	}
-	void ChunkRenderer::ChunkRenderData::markUpdated() noexcept {
-		m_IsUpdated = true;
-	}
-	void ChunkRenderer::ChunkRenderData::markFlushedToGPU() noexcept {
-		m_IsUpdated = false;
+
+	ChunkRenderer::ChunkRenderData::ChunkRenderData(std::unique_ptr<IGpuBuffer> vertexBuffer, std::unique_ptr<IGpuBuffer> indexBuffer) :
+	m_VertexBuffer(std::move(vertexBuffer)), m_IndexBuffer(std::move(indexBuffer)) { }
+
+	IGpuBuffer* ChunkRenderer::ChunkRenderData::getVertexBuffer() noexcept {
+		return m_VertexBuffer.get();
 	}
 
-	std::vector<chunkVertex_t>& ChunkRenderer::ChunkRenderData::getVertices() noexcept 	{
-		return m_Vertices;
-	}
-
-	std::vector<uint32_t>& ChunkRenderer::ChunkRenderData::getIndices() noexcept {
-		return m_Indices;
+	IGpuBuffer* ChunkRenderer::ChunkRenderData::getIndexBuffer() noexcept {
+		return m_IndexBuffer.get();
 	}
 
 	void ChunkRenderer::ChunkRenderData::setModelMatrix(const glm::mat4& matrix) noexcept {

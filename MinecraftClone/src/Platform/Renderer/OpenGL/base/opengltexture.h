@@ -8,18 +8,16 @@
 
 #include "../../../../renderer/image.h"
 
-namespace graphics {
-	namespace opengl {
+namespace graphics::opengl {
 
-		class OpenglTexture {
-		public:
-			OpenglTexture(const Image& image);
-			~OpenglTexture() noexcept;
+	class OpenglTexture {
+	public:
+		OpenglTexture(const Image& image);
+		~OpenglTexture() noexcept;
 
-			void bind(uint32_t slot) const;
-		private:
-			GLuint m_Id;
-		};
+		void bind(uint32_t slot) const;
+	private:
+		GLuint m_Id;
+	};
 
-	}
 }

@@ -5,27 +5,26 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "../../../../renderer/igpubuffer.h"
 
+namespace graphics::opengl {
 
-namespace graphics {
-	namespace opengl {
+	class OpenglInputLayout;
 
-		class OpenglInputLayout;
+	class OpenglVertexBuffer : public IGpuBuffer {
+	public:
+		OpenglVertexBuffer(size_t elementSize);
+		~OpenglVertexBuffer();
 
-		class OpenglVertexBuffer {
-		public:
-			OpenglVertexBuffer(OpenglInputLayout const* layout);
-			~OpenglVertexBuffer();
+		size_t elementsCount() const noexcept;
+		void* map() override;
+		void release() override;
+		void write(size_t size, void* data) override;
 
-			void setBuffer(void const* data, size_t totalSize, size_t elementSize);
-			void* mapBuffer();
-			void unmapBuffer();
-			void bind() const;
-		private:
-			size_t m_ElementSize;
-			GLuint m_Handle;
-			OpenglInputLayout const* m_Layout;
-		};
+		void bind(GLuint vaoHandle) const;
+	private:
+		size_t m_ElementSize, m_SizeInBytes = 0;
+		GLuint m_Handle = 0;
+	};
 
-	}
 }

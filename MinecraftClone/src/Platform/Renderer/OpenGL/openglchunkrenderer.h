@@ -17,19 +17,14 @@ namespace graphics {
 
 		class OpenglChunkRenderer : public ChunkRenderer {
 		public:
-			ChunkRenderData* createChunkRenderData() override;
+			OpenglChunkRenderer() noexcept;
+
+			std::shared_ptr<ChunkRenderData> createChunkRenderData() override;
+			void submit(const std::shared_ptr<ChunkRenderData>& chunk) override;
 			void render(const Camera& camera) override;
-		
-		private:
-			
-			struct chunkGraphicsComponent_t{
-				ChunkRenderData renderData;
-				OpenglVertexBuffer vertices;
-				OpenglIndexBuffer indices;
-			};
 
 		private:
-			std::vector<chunkGraphicsComponent_t*> m_Chunks;
+			std::vector<std::shared_ptr<ChunkRenderData>> m_ChunksToRender;
 
 			OpenglInputLayout m_ChunkVao = OpenglInputLayout({
 					{"position", graphics::ShaderDataType::FLOAT3, 3},

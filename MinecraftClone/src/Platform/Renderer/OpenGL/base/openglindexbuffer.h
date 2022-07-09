@@ -5,24 +5,26 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace graphics {
-	namespace opengl {
+#include "../../../../renderer/igpubuffer.h"
 
-		class OpenglInputLayout;
+namespace graphics::opengl {
 
-		class OpenglIndexBuffer {
-		public:
-			OpenglIndexBuffer(OpenglInputLayout const* layout);
-			~OpenglIndexBuffer();
+	class OpenglInputLayout;
 
-			void setBuffer(void const* data, size_t totalSize, size_t elementSize);
-			void bind() const;
-		private:
-			size_t m_ElementSize = 0;
-			GLuint m_Handle;
-			OpenglInputLayout const* m_Layout;
-		};
+	class OpenglIndexBuffer : public IGpuBuffer {
+	public:
+		OpenglIndexBuffer();
+		~OpenglIndexBuffer();
 
-	}
+		size_t elementsCount() const noexcept;
+		void* map() override;
+		void release() override;
+		void write(size_t size, void* data) override;
+
+		void bind(GLuint vaoHandle) const;
+	private:
+		size_t m_ElementSize = sizeof(unsigned int), m_SizeInBytes = 0;
+		GLuint m_Handle;
+	};
 
 }

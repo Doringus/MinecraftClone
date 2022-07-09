@@ -8,6 +8,9 @@
 #include "../../vendor/glm/vec2.hpp"
 #include "../../vendor/glm/mat4x4.hpp"
 
+#include "igpubuffer.h"
+#include "igpubuffermanager.h"
+
 namespace graphics {
 
 	struct chunkVertex_t {
@@ -15,44 +18,42 @@ namespace graphics {
 		glm::vec2 textureCoords;
 	};
 
+	
+
+	class ChunkRenderData {
+	public:
+		void setModelMatrix(const glm::mat4& matrix) noexcept;
+		glm::mat4 getModelMatrix() const noexcept;
+	private:
+		
+	};
+	
 	class Camera;
-	class IVertexBuffer;
-	class IIndexBuffer;
-	class ITexture;
-	class IShader;
-	class IInputLayout;
 
 	class ChunkRenderer {
 	public:
 
 		class ChunkRenderData {
 		public:
-			bool updated() const noexcept;
-			void beginChunk() noexcept;
-			void markUpdated() noexcept;
-			void markFlushedToGPU() noexcept;
+			ChunkRenderData(std::unique_ptr<IGpuBuffer> vertexBuffer, std::unique_ptr<IGpuBuffer> indexBuffer);
 
-			template<typename VBegin, typename VEnd, typename IBegin, typename IEnd>
-			void addVertices(VBegin verticesBegin, VEnd verticesEnd, IBegin indicesBegin, IEnd indicesEnd) {
-				std::copy(verticesBegin, verticesEnd, std::back_inserter(m_Vertices));
-				std::copy(indicesBegin, indicesEnd, std::back_inserter(m_Indices));
-			}
-			
-			std::vector<chunkVertex_t>& getVertices() noexcept;
-			std::vector<uint32_t>& getIndices() noexcept;
+			IGpuBuffer* getVertexBuffer() noexcept;
+			IGpuBuffer* getIndexBuffer() noexcept;
 
 			void setModelMatrix(const glm::mat4& matrix) noexcept;
 			glm::mat4 getModelMatrix() const noexcept;
 
 		private:
-			bool m_IsUpdated = true;
-			std::vector<chunkVertex_t> m_Vertices;
-			std::vector<uint32_t> m_Indices;
+			std::unique_ptr<IGpuBuffer> m_VertexBuffer;
+			std::unique_ptr<IGpuBuffer> m_IndexBuffer;
 			glm::mat4 m_ModelMatrix;
 		};
 
 	public:
-		virtual ChunkRenderData* createChunkRenderData() = 0;
+		virtual std::shared_ptr<ChunkRenderData> createChunkRenderData() = 0;
+		virtual void submit(const std::shared_ptr<ChunkRenderData>& chunk) = 0;
 		virtual void render(const Camera& camera) = 0;
+	protected:
+		std::unique_ptr<IGpuBufferManager> m_GpuBufferManager;
 	};
 }
