@@ -16,6 +16,8 @@ namespace graphics {
 
 		// returns projection * view matrix
 		glm::mat4 calculateCameraMatrix() const noexcept;
+		glm::mat4 getViewMatrix() const noexcept;
+		glm::mat4 getProjectionMatrix() const noexcept;
 		glm::vec3 position() const noexcept;
 
 		void update(const Input& input, float dt);
@@ -25,7 +27,7 @@ namespace graphics {
 		glm::vec3 m_Position;
 		glm::vec3 m_Front;
 		glm::vec3 m_Up;
-		glm::mat4 m_ProjectionMatrix;
+		glm::mat4 m_ProjectionMatrix, m_ViewMatrix;
 	};
 
 }

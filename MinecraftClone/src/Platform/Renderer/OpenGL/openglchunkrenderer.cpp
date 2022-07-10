@@ -19,6 +19,7 @@ namespace graphics::opengl {
 	}
 
 	void OpenglChunkRenderer::render(const Camera& camera) {
+		glDepthFunc(GL_LESS);
 		m_ChunkShader.use();
 		m_ChunkTextureAtlas.bind(0);
 		m_ChunkVao.bind();

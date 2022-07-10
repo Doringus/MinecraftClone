@@ -9,10 +9,20 @@
 namespace graphics {
 
 	Camera::Camera(const glm::mat4& projection, const glm::vec3& position, const glm::vec3& front, const glm::vec3& up) noexcept
-		: m_ProjectionMatrix(projection), m_Position(position), m_Front(front), m_Up(up), m_Pitch(0.f), m_Yaw(-90.f) { }
+		: m_ProjectionMatrix(projection), m_Position(position), m_Front(front), m_Up(up), m_Pitch(0.f), m_Yaw(-90.f) {
+		m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+	}
 
 	glm::mat4 Camera::calculateCameraMatrix() const noexcept {
-		return m_ProjectionMatrix * glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+		return m_ProjectionMatrix * m_ViewMatrix;
+	}
+
+	glm::mat4 Camera::getViewMatrix() const noexcept {
+		return m_ViewMatrix;
+	}
+
+	glm::mat4 Camera::getProjectionMatrix() const noexcept {
+		return m_ProjectionMatrix;
 	}
 
 	glm::vec3 Camera::position() const noexcept {
@@ -52,6 +62,7 @@ namespace graphics {
 									sin(glm::radians(m_Pitch)),
 									sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch)));
 		m_Front = glm::normalize(front);
+		m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 	}
 
 }

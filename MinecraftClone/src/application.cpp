@@ -13,6 +13,7 @@
 
 #include "platform/renderer/opengl/openglchunkrenderer.h"
 #include "platform/renderer/opengl/openglrenderercontext.h"
+#include "platform/renderer/opengl/openglskyboxrenderer.h"
 
 #include "renderer/bufferlayout.h"
 #include "renderer/camera.h"
@@ -52,6 +53,7 @@ void Application::run() {
 
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
+    graphics::opengl::OpenglSkyboxRenderer skyboxRenderer;
 
     auto chunkRenderData = renderer.createChunkRenderData();
     chunkRenderData->setModelMatrix(glm::mat4(1.0f));
@@ -140,6 +142,7 @@ void Application::run() {
         renderer.submit(chunkData.renderData);
 
         renderer.render(camera);
+        skyboxRenderer.render(camera);
 
         m_Window->swapBuffers();
         
