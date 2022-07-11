@@ -4,23 +4,21 @@
 
 #include "../../../../renderer/bufferlayout.h"
 
-namespace graphics {
-	namespace opengl {
+namespace graphics::opengl {
 
-		class OpenglInputLayout {
-		public:
-			explicit OpenglInputLayout(const BufferLayout& layout);
-			~OpenglInputLayout();
+	class OpenglInputLayout {
+	public:
+		explicit OpenglInputLayout(const BufferLayout& layout);
+		~OpenglInputLayout();
 
-			void bind() const;
-			void unbind() const;
+		void bind() const;
+		void unbind() const;
 
-			GLuint getId() const noexcept;
+		GLuint getId() const noexcept;
 
-		private:
-			BufferLayout m_Layout;
-			GLuint m_Id;
-		};
+	private:
+		BufferLayout m_Layout;
+		GLuint m_Id;
+	};
 
-	}
 }

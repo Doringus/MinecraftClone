@@ -15,27 +15,31 @@
     <ClCompile Include="src\game\world\blocksdatabase.cpp" />
     <ClCompile Include="src\game\world\chunk.cpp" />
     <ClCompile Include="src\game\world\dummyworldgenerator.cpp" />
-    <ClCompile Include="src\game\world\terrainmanager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
     <ClCompile Include="src\platform\glfw\input.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\base\openglcubemap.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\openglshader.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglchunkrenderer.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\openglindexbuffer.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\openglinputlayout.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglgpubuffermanager.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglrenderercontext.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\opengltexture.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\openglvertexbuffer.cpp" />
+    <ClCompile Include="src\platform\renderer\opengl\openglskyboxrenderer.cpp" />
     <ClCompile Include="src\renderer\camera.cpp" />
-    <ClCompile Include="src\renderer\chunkrenderer.cpp" />
     <ClCompile Include="src\renderer\image.cpp" />
+    <ClCompile Include="src\renderer\renderitem.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\basic.frag" />
     <None Include="src\shaders\default.frag" />
     <None Include="src\shaders\default.vert" />
+    <None Include="src\shaders\skybox.frag" />
+    <None Include="src\shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
@@ -50,18 +54,25 @@
     <ClInclude Include="src\platform\glfw\glfwinputmapper.h" />
     <ClInclude Include="src\platform\glfw\glfwwindow.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\debug.h" />
+    <ClInclude Include="src\platform\renderer\opengl\base\openglcubemap.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglindexbuffer.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglshader.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglchunkrenderer.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglgpubuffermanager.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglrenderercontext.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglinputlayout.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\opengltexture.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglvertexbuffer.h" />
+    <ClInclude Include="src\platform\renderer\opengl\openglskyboxrenderer.h" />
     <ClInclude Include="src\renderer\bufferlayout.h" />
     <ClInclude Include="src\renderer\camera.h" />
     <ClInclude Include="src\renderer\chunkrenderer.h" />
+    <ClInclude Include="src\renderer\igpubuffermanager.h" />
+    <ClInclude Include="src\renderer\igpubuffer.h" />
     <ClInclude Include="src\renderer\image.h" />
     <ClInclude Include="src\renderer\irenderercontext.h" />
+    <ClInclude Include="src\renderer\renderitem.h" />
+    <ClInclude Include="src\renderer\skyboxrenderer.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

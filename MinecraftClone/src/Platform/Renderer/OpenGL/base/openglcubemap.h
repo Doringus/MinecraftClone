@@ -1,21 +1,20 @@
 #pragma once
 
-#include <vector>
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "../../../../renderer/image.h"
+#include <vector>
 
 namespace graphics::opengl {
 
-	class OpenglTexture {
+	class OpenglCubemap {
 	public:
-		OpenglTexture(const Image& image);
-		~OpenglTexture() noexcept;
-
-		void bind(uint32_t slot) const;
+		OpenglCubemap(const std::vector<Image>& images);
+		~OpenglCubemap() noexcept;
+		
+		void bind(uint32_t slot);
 	private:
 		GLuint m_Id;
 	};
