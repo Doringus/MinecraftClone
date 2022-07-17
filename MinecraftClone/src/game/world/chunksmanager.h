@@ -28,7 +28,9 @@ namespace game::world {
 	private:
 		std::unique_ptr<chunk_t> createEmptyChunk(const chunkBox_t& box);
 		std::unique_ptr<chunk_t> loadChunkFromDisk(); // todo later
-		std::vector<chunk_t*> getChunksToRewrite();
+		std::vector<std::unique_ptr<chunk_t>> getChunksToRewrite(int64_t offsetX, int64_t offsetZ);
+		void rewriteChunks(std::vector<std::unique_ptr<chunk_t>>& chunks) const;
+		void updateChunkData(const std::unique_ptr<chunk_t>& chunk) const;
 	private:
 		BlocksDatabase m_BlocksDatabase;
 		worldBox_t m_WorldBox;

@@ -9,6 +9,7 @@ namespace game::world {
 	class ChunksHashmapStorage : public IChunksStorage {
 	public:
 		std::optional<chunk_t*> getChunk(int64_t x, int64_t z) const override;
+		bool contains(int64_t x, int64_t z) const noexcept override;
 		std::optional<std::unique_ptr<chunk_t>> takeChunk(int64_t x, int64_t z) override;
 		void insertChunk(std::unique_ptr<chunk_t> chunk) override;
 		void removeChunk(int64_t x, int64_t z) override;

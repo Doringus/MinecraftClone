@@ -7,12 +7,11 @@
 
 namespace game::world {
 
-	int64_t getChunkCoord(int64_t coord, size_t chunkSize) {
+	int64_t getChunkCoord(int64_t coord, int64_t chunkSize) {
 		if (coord >= 0) {
-			return ((coord / chunkSize) * chunkSize);
-		}
-		else {
-			return ((coord / chunkSize) * chunkSize - chunkSize);
+			return (coord / chunkSize);
+		} else {
+			return ((coord / chunkSize) - 1);
 		}
 	}
 
@@ -26,8 +25,7 @@ namespace game::world {
 		for (int64_t i = m_WorldBox.bottomLeftX; i < int64_t(m_WorldBox.size) + m_WorldBox.bottomLeftX; ++i) {
 			for (int64_t j = m_WorldBox.bottomLeftZ; j <int64_t(m_WorldBox.size) + m_WorldBox.bottomLeftZ; ++j) {
 				auto chunk = createEmptyChunk({ i, j, 16, 256, 16 });
-				chunk->blocks = m_WorldGenerator->createChunk(chunk->box);
-				createChunkMesh(m_BlocksDatabase, *chunk);
+				updateChunkData(chunk);
 				m_ChunksStorage->insertChunk(std::move(chunk));
 			}
 		}
@@ -39,7 +37,12 @@ namespace game::world {
 		int64_t offsetX = chunkX - m_CurrentChunkX;
 		int64_t offsetZ = chunkZ - m_CurrentChunkZ;
 		if (offsetX != 0 || offsetZ != 0) {
-		//	auto chunkToRewrite = getChunksToRewrite();
+			std::vector<std::unique_ptr<chunk_t>> chunksToRewrite = getChunksToRewrite(offsetX, offsetZ);
+			m_CurrentChunkX = chunkX;
+			m_CurrentChunkZ = chunkZ;
+			m_WorldBox.bottomLeftX += offsetX;
+			m_WorldBox.bottomLeftZ += offsetZ;
+			rewriteChunks(chunksToRewrite);
 		}
 
 	}
@@ -54,7 +57,6 @@ namespace game::world {
 
 	std::unique_ptr<chunk_t> ChunksManager::createEmptyChunk(const chunkBox_t& box) {
 		auto renderItem = m_Renderer->createChunkRenderData();
-		renderItem->setModelMatrix(glm::translate(glm::mat4(1.0), glm::vec3(box.xGrid * int64_t(box.width), 0, box.zGrid * int64_t(box.depth))));
 		return std::make_unique<chunk_t>(box, utils::Container3d<uint16_t>(box.width, box.height, box.depth), renderItem);
 	}
 
@@ -62,8 +64,67 @@ namespace game::world {
 		return std::unique_ptr<chunk_t>();
 	}
 
-	std::vector<chunk_t*> ChunksManager::getChunksToRewrite() {
-		return std::vector<chunk_t*>();
+	std::vector<std::unique_ptr<chunk_t>> ChunksManager::getChunksToRewrite(int64_t offsetX, int64_t offsetZ) {
+		std::vector<std::unique_ptr<chunk_t>> result;
+		if (offsetX > 0) {
+			for (int64_t i = m_WorldBox.bottomLeftX; i < m_WorldBox.bottomLeftX + offsetX; ++i) {
+				for (int64_t j = m_WorldBox.bottomLeftZ; j < m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size; ++j) {
+					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
+						result.push_back(std::move(*chunk));
+					}
+				}
+			}
+		} else {
+			for (int64_t i = m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size + offsetX; i < m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size; ++i) {
+				for (int64_t j = m_WorldBox.bottomLeftZ; j < m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size; ++j) {
+					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
+						result.push_back(std::move(*chunk));
+					}
+				}
+			}
+		}
+
+		if (offsetZ > 0) {
+			for (int64_t j = m_WorldBox.bottomLeftZ; j < m_WorldBox.bottomLeftZ + offsetZ; ++j) {
+				for (int64_t i = m_WorldBox.bottomLeftX; i < m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size; ++i) {
+					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
+						result.push_back(std::move(*chunk));
+					}
+				}
+			}
+		} else {
+			for (int64_t j = m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size + offsetZ; j < m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size; ++j) {
+				for (int64_t i = m_WorldBox.bottomLeftX; i < m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size; ++i) {
+					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
+						result.push_back(std::move(*chunk));
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	void ChunksManager::rewriteChunks(std::vector<std::unique_ptr<chunk_t>>& chunks) const {
+		for (int64_t i = m_WorldBox.bottomLeftX; i < int64_t(m_WorldBox.size) + m_WorldBox.bottomLeftX; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftZ; j < int64_t(m_WorldBox.size) + m_WorldBox.bottomLeftZ; ++j) {
+				if (!m_ChunksStorage->contains(i, j)) {
+					auto chunk = std::move(chunks.back());
+					chunks.pop_back();
+					chunk->box.xGrid = i;
+					chunk->box.zGrid = j;
+					updateChunkData(chunk);
+					m_ChunksStorage->insertChunk(std::move(chunk));
+				}
+			}
+		}
+	}
+
+	void ChunksManager::updateChunkData(const std::unique_ptr<chunk_t>& chunk) const {
+		chunk->renderData->setModelMatrix(glm::translate(glm::mat4(1.0), glm::vec3(chunk->box.xGrid * int64_t(chunk->box.width), 
+			0, chunk->box.zGrid * int64_t(chunk->box.depth))));
+		chunk->blocks = m_WorldGenerator->createChunk(chunk->box);
+		createChunkMesh(m_BlocksDatabase, *chunk);
 	}
 
 }

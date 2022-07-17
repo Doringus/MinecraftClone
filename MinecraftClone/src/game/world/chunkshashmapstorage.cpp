@@ -9,6 +9,10 @@ namespace game::world {
 		return std::nullopt;
 	}
 
+	bool ChunksHashmapStorage::contains(int64_t x, int64_t z) const noexcept {
+		return m_Chunks.contains({ x, z });
+	}
+
 	std::optional<std::unique_ptr<chunk_t>> ChunksHashmapStorage::takeChunk(int64_t x, int64_t z) {
 		if (m_Chunks.contains({ x, z })) {
 			auto chunkPtr = std::move(m_Chunks.at({ x, z }));
