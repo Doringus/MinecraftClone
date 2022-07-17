@@ -43,7 +43,8 @@ namespace game::world {
 			for (int64_t z = 0; z < chunk.depth; ++z) {
 				float temperature = const_cast<DummyWorldGenerator*>(this)->m_TemperatureGenerator.GetNoise<float>(x + chunk.xGrid, z + chunk.zGrid); /// why no const in fastnoise
 				float humidity = const_cast<DummyWorldGenerator*>(this)->m_HumidityGenerator.GetNoise<float>(x + chunk.xGrid, z + chunk.zGrid); /// why no const in fastnoise
-				float height = const_cast<DummyWorldGenerator*>(this)->m_HeightGenerator.GetNoise<float>((x + chunk.xGrid * chunk.width) / 10.0, (z + chunk.zGrid * chunk.depth) / 10.0); /// why no const in fastnoise
+				float height = const_cast<DummyWorldGenerator*>(this)->m_HeightGenerator.GetNoise<float>((x + chunk.xGrid * int64_t(chunk.width)) / 10.0, 
+					(z + chunk.zGrid * int64_t(chunk.depth)) / 10.0); /// why no const in fastnoise
 				createColumn(result, temperature, humidity, height, x, z);
 			}
 		}

@@ -14,6 +14,9 @@
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\game\world\blocksdatabase.cpp" />
     <ClCompile Include="src\game\world\chunk.cpp" />
+    <ClCompile Include="src\game\world\chunksfactory.cpp" />
+    <ClCompile Include="src\game\world\chunkshashmapstorage.cpp" />
+    <ClCompile Include="src\game\world\chunksmanager.cpp" />
     <ClCompile Include="src\game\world\dummyworldgenerator.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
@@ -46,6 +49,10 @@
     <ClInclude Include="src\container3d.h" />
     <ClInclude Include="src\game\world\blocksdatabase.h" />
     <ClInclude Include="src\game\world\chunk.h" />
+    <ClInclude Include="src\game\world\chunksfactory.h" />
+    <ClInclude Include="src\game\world\chunkshashmapstorage.h" />
+    <ClInclude Include="src\game\world\chunksmanager.h" />
+    <ClInclude Include="src\game\world\ichunksstorage.h" />
     <ClInclude Include="src\game\world\dummyworldgenerator.h" />
     <ClInclude Include="src\game\world\iworldgenerator.h" />
     <ClInclude Include="src\game\world\terrainmanager.h" />

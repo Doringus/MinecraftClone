@@ -19,6 +19,7 @@
 #include "renderer/camera.h"
 
 #include "game/world/chunk.h"
+#include "game/world/chunksmanager.h"
 #include "game/world/dummyworldgenerator.h"
 
 #include "utils.h"
@@ -55,42 +56,6 @@ void Application::run() {
     graphics::opengl::OpenglChunkRenderer renderer;
     graphics::opengl::OpenglSkyboxRenderer skyboxRenderer;
 
-    auto chunkRenderData = renderer.createChunkRenderData();
-    chunkRenderData->setModelMatrix(glm::mat4(1.0f));
-    game::world::chunk_t chunkData = {
-        {
-            0, 0, 16, 256, 16
-        },
-        utils::Container3d<uint16_t>(16, 256, 16),
-        chunkRenderData,
-    };
-
-    /*
-    auto chunkRenderData = renderer.createChunkRenderData();
-    chunkRenderData->setModelMatrix(glm::mat4(1.0f));
-    game::world::chunk_t chunkData = {
-        {
-            0, 0, 16, 256, 16
-        },
-        utils::Container3d<uint16_t>(16, 256, 16),
-        chunkRenderData,
-    };
-
-    auto chunkRenderData1 = renderer.createChunkRenderData();
-    chunkRenderData1->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(16, 0, 0)));
-    game::world::chunk_t chunkData1 = {
-       {
-           1, 0, 16, 256, 16
-       },
-       utils::Container3d<uint16_t>(16, 256, 16),
-       chunkRenderData1,
-    };
-    */
-    game::world::DummyWorldGenerator generator({ 1337, 1338, 1333 }, {});
-    chunkData.blocks = generator.createChunk(chunkData.box);
-   // chunkData1.blocks = generator.createChunk(chunkData1.box);
-
-
     game::world::BlocksMap blocksMap;
     game::world::blockTextureFormat_t tree {
     game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // front
@@ -121,9 +86,8 @@ void Application::run() {
     blocksMap[3] = dirt;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
-    game::world::createChunkMesh(blockDatabase, chunkData);
-   // game::world::createChunkMesh(blockDatabase, chunkData1);
-
+    game::world::ChunksManager chunksManager(4, blockDatabase, std::make_unique<game::world::DummyWorldGenerator>(game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
+        game::world::DummyWorldGenerator::BiomesConfig{}), &renderer);
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
     
     double dt = 1.0 / 60.0;
@@ -132,14 +96,16 @@ void Application::run() {
     while (m_Window->isOpen()) {
         m_Window->pollEvents();
 
-       // spdlog::info("Frame time {0}ms", dt * 1000);
-        spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
+        spdlog::info("Frame time {0}ms", dt * 1000);
+      //  spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
         m_Input->update();
         camera.update(*m_Input, dt);
+        chunksManager.updateChunks(camera.position().x, camera.position().z);
+
+
         context.clearScreen(0.2, 0.2, 0.2, 1.0);
         context.clearFramebuffer();
-
-        renderer.submit(chunkData.renderData);
+        chunksManager.submitChunksToRenderer();
 
         renderer.render(camera);
         skyboxRenderer.render(camera);
