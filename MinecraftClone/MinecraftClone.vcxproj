@@ -32,6 +32,7 @@
     <ClCompile Include="src\platform\renderer\opengl\base\opengltexture.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\base\openglvertexbuffer.cpp" />
     <ClCompile Include="src\platform\renderer\opengl\openglskyboxrenderer.cpp" />
+    <ClCompile Include="src\rawbuffer.cpp" />
     <ClCompile Include="src\renderer\camera.cpp" />
     <ClCompile Include="src\renderer\image.cpp" />
     <ClCompile Include="src\renderer\renderitem.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="src\platform\renderer\opengl\base\opengltexture.h" />
     <ClInclude Include="src\platform\renderer\opengl\base\openglvertexbuffer.h" />
     <ClInclude Include="src\platform\renderer\opengl\openglskyboxrenderer.h" />
+    <ClInclude Include="src\rawbuffer.h" />
     <ClInclude Include="src\renderer\bufferlayout.h" />
     <ClInclude Include="src\renderer\camera.h" />
     <ClInclude Include="src\renderer\chunkrenderer.h" />

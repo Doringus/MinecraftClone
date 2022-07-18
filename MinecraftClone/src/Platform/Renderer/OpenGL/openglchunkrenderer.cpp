@@ -25,6 +25,8 @@ namespace graphics::opengl {
 		m_ChunkVao.bind();
 		for (auto& renderable : m_ChunksToRender) {
 			m_ChunkShader.setUniformMat4("mvp", camera.calculateCameraMatrix() * renderable->getModelMatrix());
+			renderable->getVertexBuffer()->copyFromShadowBuffer();
+			renderable->getIndexBuffer()->copyFromShadowBuffer();
 			static_cast<OpenglIndexBuffer*>(renderable->getIndexBuffer())->bind(m_ChunkVao.getId());
 			static_cast<OpenglVertexBuffer*>(renderable->getVertexBuffer())->bind(m_ChunkVao.getId());
 			glDrawElements(GL_TRIANGLES, renderable->getIndexBuffer()->elementsCount(), GL_UNSIGNED_INT, 0);

@@ -14,20 +14,24 @@ namespace graphics::opengl {
 	}
 
 	size_t OpenglIndexBuffer::elementsCount() const noexcept {
-		return m_SizeInBytes / m_ElementSize;
+		return m_ShadowBuffer.getSize() / m_ElementSize;
 	}
 
-	void* OpenglIndexBuffer::map() {
-		return glMapNamedBuffer(m_Handle, GL_WRITE_ONLY);
+	void OpenglIndexBuffer::appendData(size_t size, void* data) {
+		m_IsUpdated = false;
+		m_ShadowBuffer.submitData(data, size);
 	}
 
-	void OpenglIndexBuffer::release() {
-		glUnmapNamedBuffer(m_Handle);
+	void OpenglIndexBuffer::clear() {
+		m_ShadowBuffer.clear();
 	}
 
-	void OpenglIndexBuffer::write(size_t size, void* data) {
-		m_SizeInBytes += size;
-		glNamedBufferData(m_Handle, size, data, GL_DYNAMIC_DRAW);
+	void OpenglIndexBuffer::copyFromShadowBuffer() {
+		if (!m_IsUpdated) {
+			glNamedBufferData(m_Handle, m_ShadowBuffer.getSize(), m_ShadowBuffer.getData(), GL_DYNAMIC_DRAW);
+			m_IsUpdated = true;
+		}
+		
 	}
 
 	void OpenglIndexBuffer::bind(GLuint vaoHandle) const {

@@ -16,17 +16,21 @@ size_t graphics::opengl::OpenglVertexBuffer::elementsCount() const noexcept {
 	return m_SizeInBytes / m_ElementSize;
 }
 
-void* OpenglVertexBuffer::map() {
-	return glMapNamedBuffer(m_Handle, GL_WRITE_ONLY);
+
+void OpenglVertexBuffer::appendData(size_t size, void* data) {
+	m_IsUpdated = false;
+	m_ShadowBuffer.submitData(data, size);
 }
 
-void OpenglVertexBuffer::release() {
-	glUnmapNamedBuffer(m_Handle);
+void OpenglVertexBuffer::clear() {
+	m_ShadowBuffer.clear();
 }
 
-void OpenglVertexBuffer::write(size_t size, void* data) {
-	m_SizeInBytes += size;
-	glNamedBufferData(m_Handle, size, data, GL_DYNAMIC_DRAW);
+void OpenglVertexBuffer::copyFromShadowBuffer() {
+	if (!m_IsUpdated) {
+		glNamedBufferData(m_Handle, m_ShadowBuffer.getSize(), m_ShadowBuffer.getData(), GL_DYNAMIC_DRAW);
+		m_IsUpdated = true;
+	}
 }
 
 void OpenglVertexBuffer::bind(GLuint vaoHandle) const {

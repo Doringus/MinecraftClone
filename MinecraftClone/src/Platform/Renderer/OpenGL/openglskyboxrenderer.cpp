@@ -32,8 +32,10 @@ namespace graphics::opengl {
 			6, 5, 7,
 			7, 5, 2,
 			2, 0, 7 };
-		m_Skybox->getVertexBuffer()->write(vertices.size() * sizeof(skyboxVertex_t), vertices.data());
-		m_Skybox->getIndexBuffer()->write(indices.size() * sizeof(unsigned int), indices.data());
+		m_Skybox->getVertexBuffer()->appendData(vertices.size() * sizeof(skyboxVertex_t), vertices.data());
+		m_Skybox->getIndexBuffer()->appendData(indices.size() * sizeof(unsigned int), indices.data());
+		m_Skybox->getVertexBuffer()->copyFromShadowBuffer();
+		m_Skybox->getIndexBuffer()->copyFromShadowBuffer();
 	}
 		
 

@@ -17,9 +17,9 @@ namespace graphics::opengl {
 		~OpenglVertexBuffer();
 
 		size_t elementsCount() const noexcept;
-		void* map() override;
-		void release() override;
-		void write(size_t size, void* data) override;
+		void appendData(size_t size, void* data) override;
+		void clear() override;
+		void copyFromShadowBuffer() override;
 
 		void bind(GLuint vaoHandle) const;
 	private:

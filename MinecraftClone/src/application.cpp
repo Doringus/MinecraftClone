@@ -96,8 +96,8 @@ void Application::run() {
     while (m_Window->isOpen()) {
         m_Window->pollEvents();
 
-      //  spdlog::info("Frame time {0}ms", dt * 1000);
-        spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
+        spdlog::info("Frame time {0}ms", dt * 1000);
+       // spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
         m_Input->update();
         camera.update(*m_Input, dt);
         chunksManager.updateChunks(camera.position().x, camera.position().z);

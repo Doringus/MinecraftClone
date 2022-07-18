@@ -4,6 +4,7 @@
 #include <array>
 
 #include "../../renderer/igpubuffer.h"
+#include "ichunksstorage.h"
 
 namespace game::world {
 
@@ -68,7 +69,7 @@ namespace game::world {
 		vertices.push_back(graphics::chunkVertex_t{ { 0.0f + x, 0.0f + y, 1.0f + z }, textureFormat.topRight }); // bottom-left front
 	}
 
-	void createChunkMesh(const BlocksDatabase& blocksDatabase, chunk_t& chunk) {
+	void createChunkMesh(const IChunksStorage& storage, const BlocksDatabase& blocksDatabase, chunk_t& chunk) {
 		/* Simple culling algorithm */
 		std::vector<graphics::chunkVertex_t> vertices;
 		std::vector<unsigned int> indices;
@@ -111,7 +112,74 @@ namespace game::world {
 				}
 			}
 		}
-		chunk.renderData->getVertexBuffer()->write(vertices.size() * sizeof(graphics::chunkVertex_t), vertices.data());
-		chunk.renderData->getIndexBuffer()->write(indices.size() * sizeof(unsigned int), indices.data());
+
+		// fill border blocks
+
+		//Right border
+		// getChunk(&world->hashMap, chunk->x + CHUNK_SIZE, chunk->z);
+	/*	if (auto borderChunk = storage.getChunk(chunk.box.xGrid + 1, chunk.box.zGrid); borderChunk) {
+			for (int z = 0; z < chunk.box.depth; ++z) {
+				for (int y = 0; y < chunk.box.height; ++y) {
+					// for right neighbour
+					if ((*borderChunk)->blocks.get(0, y, z) && !chunk.blocks.get(chunk.box.width - 1, y, z)) {
+					//	addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat((*borderChunk)->blocks.get(0, y, z)).left, vertices);
+					}
+					// for current chunk
+					if (!(*borderChunk)->blocks.get(0, y, z) && chunk.blocks.get(chunk.box.width - 1, y, z)) {
+						addRightFaceVertices(chunk.box.width - 1, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(chunk.box.width - 1, y, z)).right, vertices);
+					}
+				}
+			}
+		}
+		//Left border
+		if (auto borderChunk = storage.getChunk(chunk.box.xGrid - 1, chunk.box.zGrid); borderChunk) {
+			for (int z = 0; z < chunk.box.depth; ++z) {
+				for (int y = 0; y < chunk.box.height; ++y) {
+					// for left chunk
+					if ((*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && !chunk.blocks.get(0, y, z)) {
+					//	addRightFaceVertices(chunk.box.width - 1, y, z, blocksDatabase.getBlockTextureFormat((*borderChunk)->blocks.get(chunk.box.width - 1, y, z)).right, vertices);
+					}
+					// for current chunk
+					if (!(*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && chunk.blocks.get(0, y, z)) {
+						addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(0, y, z)).right, vertices);
+					}
+				}
+			}
+		}
+
+		// front border
+		if (auto borderChunk = storage.getChunk(chunk.box.xGrid, chunk.box.zGrid + 1); borderChunk) {
+			for (int x = 0; x < chunk.box.width; ++x) {
+				for (int y = 0; y < chunk.box.height; ++y) {
+					// for front neighbour 
+					if ((*borderChunk)->blocks.get(x, y, 0) && !chunk.blocks.get(x, y, chunk.box.depth - 1)) {
+					//	addBackFaceVertices(x, y, 0, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, 0)).back, vertices);
+					}
+					// for current chunk
+					if (!(*borderChunk)->blocks.get(x, y, 0) && chunk.blocks.get(x, y, chunk.box.depth - 1)) {
+						addFrontFaceVertices(x, y, chunk.box.depth - 1, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, chunk.box.depth - 1)).front, vertices);
+					}
+				}
+			}
+		}
+
+		// back border
+		if (auto borderChunk = storage.getChunk(chunk.box.xGrid, chunk.box.zGrid - 1); borderChunk) {
+			for (int x = 0; x < chunk.box.width; ++x) {
+				for (int y = 0; y < chunk.box.height; ++y) {
+					// for back neighbour
+					if ((*borderChunk)->blocks.get(x, y, chunk.box.depth - 1) && !chunk.blocks.get(x, y, 0)) {
+					//	addFrontFaceVertices(x, y, chunk.box.depth - 1, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, chunk.box.depth - 1)).front, vertices);
+					}
+					// for current chunk
+					if (!(*borderChunk)->blocks.get(x, y, chunk.box.depth - 1) && chunk.blocks.get(x, y, 0)) {
+						addBackFaceVertices(x, y, 0, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, 0)).back, vertices);
+					}
+				}
+			}
+		} */
+
+		chunk.renderData->getVertexBuffer()->appendData(vertices.size() * sizeof(graphics::chunkVertex_t), vertices.data());
+		chunk.renderData->getIndexBuffer()->appendData(indices.size() * sizeof(unsigned int), indices.data());
 	}
 }

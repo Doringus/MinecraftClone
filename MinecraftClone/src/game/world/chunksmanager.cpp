@@ -123,8 +123,10 @@ namespace game::world {
 	void ChunksManager::updateChunkData(const std::unique_ptr<chunk_t>& chunk) const {
 		chunk->renderData->setModelMatrix(glm::translate(glm::mat4(1.0), glm::vec3(chunk->box.xGrid * int64_t(chunk->box.width), 
 			0, chunk->box.zGrid * int64_t(chunk->box.depth))));
+		chunk->renderData->getIndexBuffer()->clear();
+		chunk->renderData->getVertexBuffer()->clear();
 		chunk->blocks = m_WorldGenerator->createChunk(chunk->box);
-		createChunkMesh(m_BlocksDatabase, *chunk);
+		createChunkMesh(*m_ChunksStorage, m_BlocksDatabase, *chunk);
 	}
 
 }
