@@ -82,6 +82,8 @@
     <ClInclude Include="src\renderer\irenderercontext.h" />
     <ClInclude Include="src\renderer\renderitem.h" />
     <ClInclude Include="src\renderer\skyboxrenderer.h" />
+    <ClInclude Include="src\threading\blockingqueue.h" />
+    <ClInclude Include="src\threading\threadpool.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
