@@ -55,7 +55,7 @@ void Application::run() {
 
     using namespace std::chrono_literals;
     utils::ThreadPool tp(4);
-    tp.submit([]() {
+    /*  tp.submit([]() {
         spdlog::info("Task 1 {0}", std::chrono::system_clock::now());
         std::this_thread::sleep_for(2000ms);
     });
@@ -83,7 +83,7 @@ void Application::run() {
         spdlog::info("Task 7 {0}", std::chrono::system_clock::now());
         std::this_thread::sleep_for(2000ms);
         });
-
+        */
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
     graphics::opengl::OpenglSkyboxRenderer skyboxRenderer;
@@ -119,7 +119,7 @@ void Application::run() {
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::ChunksManager chunksManager(4, blockDatabase, std::make_unique<game::world::DummyWorldGenerator>(game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
-        game::world::DummyWorldGenerator::BiomesConfig{}), &renderer);
+        game::world::DummyWorldGenerator::BiomesConfig{}), &renderer, &tp);
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
     
     double dt = 1.0 / 60.0;

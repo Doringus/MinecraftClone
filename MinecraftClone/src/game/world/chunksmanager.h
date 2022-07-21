@@ -7,6 +7,10 @@ namespace graphics {
 	class ChunkRenderer;
 }
 
+namespace utils {
+	class ThreadPool;
+}
+
 namespace game::world {
 
 	class IWorldGenerator;
@@ -14,14 +18,14 @@ namespace game::world {
 	class ChunksManager {
 
 		struct worldBox_t {
-			int64_t bottomLeftX;
-			int64_t bottomLeftZ;
-			size_t size;
+			int64_t bottomLeftX, bottomLeftXWithShadowChunks;
+			int64_t bottomLeftZ, bottomLeftZWithShadowChunks;
+			size_t size, sizeWithShadowChunks;
 		};
 
 	public:
 		ChunksManager(size_t worldSize, const BlocksDatabase& blocksDatabase, 
-			std::unique_ptr<IWorldGenerator> worldGenerator, graphics::ChunkRenderer* renderer) noexcept;
+			std::unique_ptr<IWorldGenerator> worldGenerator, graphics::ChunkRenderer* renderer, utils::ThreadPool* threadPool) noexcept;
 
 		void updateChunks(int64_t x, int64_t z);
 		void submitChunksToRenderer();
@@ -37,6 +41,7 @@ namespace game::world {
 		int64_t m_CurrentChunkX = 0, m_CurrentChunkZ = 0;
 		size_t m_WorldSize;
 		graphics::ChunkRenderer* m_Renderer;
+		utils::ThreadPool* m_ThreadPool;
 		std::unique_ptr<IChunksStorage> m_ChunksStorage;
 		std::unique_ptr<IWorldGenerator> m_WorldGenerator;
 	};

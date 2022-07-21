@@ -12,7 +12,13 @@
 
 namespace utils {
 
-	
+	template<typename T>
+	static inline void waitForAllTasks(const std::vector<std::future<T>>& tasks) {
+		for (const auto& task : tasks) {
+			task.wait();
+		}
+	}
+
 	class ThreadPool {
 	public:
 		ThreadPool(size_t threadsCount = 4) : m_ThreadsCount(threadsCount), m_TaskQueues(threadsCount) {
@@ -62,7 +68,6 @@ namespace utils {
 				if (!task && !m_TaskQueues[threadId].pop(task)) {
 					break;
 				}
-				spdlog::info("Thread {0} take task", threadId);
 				task();
 			}
 		}
