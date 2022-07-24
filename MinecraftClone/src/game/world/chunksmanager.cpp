@@ -25,8 +25,7 @@ namespace game::world {
 								 m_WorldSize(worldSize), m_BlocksDatabase(blocksDatabase), m_WorldGenerator(std::move(worldGenerator)),
 								 m_Renderer(renderer), m_ThreadPool(threadPool) {
 
-		m_WorldBox = { (int64_t)0 - (int64_t)m_WorldSize, (int64_t)0 - (int64_t)m_WorldSize - 1, (int64_t)0 - (int64_t)worldSize, 
-			(int64_t)0 - (int64_t)worldSize - 1, worldSize * 2 + 1,  worldSize * 2 + 1 + 2};
+		m_WorldBox = { (int64_t)0 - (int64_t)m_WorldSize, (int64_t)0 - (int64_t)worldSize, worldSize * 2 + 1};
 		m_ChunksStorage = std::make_unique<ChunksHashmapStorage>();
 		auto t1 = std::chrono::steady_clock::now();
 		std::vector<std::future<void>> chunkTasks;
@@ -75,8 +74,6 @@ namespace game::world {
 			m_CurrentChunkZ = chunkZ;
 			m_WorldBox.bottomLeftX += offsetX;
 			m_WorldBox.bottomLeftZ += offsetZ;
-			m_WorldBox.bottomLeftXWithShadowChunks = m_WorldBox.bottomLeftX - 1;
-			m_WorldBox.bottomLeftZ = m_WorldBox.bottomLeftZ - 1;
 			rewriteChunks(chunksToRewrite);
 		}
 	}
@@ -101,17 +98,17 @@ namespace game::world {
 	std::vector<std::unique_ptr<chunk_t>> ChunksManager::getChunksToRewrite(int64_t offsetX, int64_t offsetZ) {
 		std::vector<std::unique_ptr<chunk_t>> result;
 		if (offsetX > 0) {
-			for (int64_t i = m_WorldBox.bottomLeftXWithShadowChunks; i < m_WorldBox.bottomLeftXWithShadowChunks + offsetX; ++i) {
-				for (int64_t j = m_WorldBox.bottomLeftZWithShadowChunks; j < m_WorldBox.bottomLeftZWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks; ++j) {
+			for (int64_t i = m_WorldBox.bottomLeftX; i < m_WorldBox.bottomLeftX + offsetX; ++i) {
+				for (int64_t j = m_WorldBox.bottomLeftZ; j < m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size; ++j) {
 					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
 						result.push_back(std::move(*chunk));
 					}
 				}
 			}
 		} else {
-			for (int64_t i = m_WorldBox.bottomLeftXWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks + offsetX; 
-				i < m_WorldBox.bottomLeftXWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks; ++i) {
-				for (int64_t j = m_WorldBox.bottomLeftZWithShadowChunks; j < m_WorldBox.bottomLeftZWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks; ++j) {
+			for (int64_t i = m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size + offsetX;
+				i < m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size; ++i) {
+				for (int64_t j = m_WorldBox.bottomLeftZ; j < m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size; ++j) {
 					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
 						result.push_back(std::move(*chunk));
 					}
@@ -120,17 +117,17 @@ namespace game::world {
 		}
 
 		if (offsetZ > 0) {
-			for (int64_t j = m_WorldBox.bottomLeftZWithShadowChunks; j < m_WorldBox.bottomLeftZWithShadowChunks + offsetZ; ++j) {
-				for (int64_t i = m_WorldBox.bottomLeftXWithShadowChunks; i < m_WorldBox.bottomLeftXWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftZ; j < m_WorldBox.bottomLeftZ + offsetZ; ++j) {
+				for (int64_t i = m_WorldBox.bottomLeftX; i < m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size; ++i) {
 					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
 						result.push_back(std::move(*chunk));
 					}
 				}
 			}
 		} else {
-			for (int64_t j = m_WorldBox.bottomLeftZWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks + offsetZ; 
-				j < m_WorldBox.bottomLeftZWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks; ++j) {
-				for (int64_t i = m_WorldBox.bottomLeftXWithShadowChunks; i < m_WorldBox.bottomLeftXWithShadowChunks + (int64_t)m_WorldBox.sizeWithShadowChunks; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size + offsetZ;
+				j < m_WorldBox.bottomLeftZ + (int64_t)m_WorldBox.size; ++j) {
+				for (int64_t i = m_WorldBox.bottomLeftX; i < m_WorldBox.bottomLeftX + (int64_t)m_WorldBox.size; ++i) {
 					if (auto chunk = m_ChunksStorage->takeChunk(i, j); chunk) {
 						result.push_back(std::move(*chunk));
 					}

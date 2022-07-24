@@ -18,9 +18,9 @@ namespace game::world {
 	class ChunksManager {
 
 		struct worldBox_t {
-			int64_t bottomLeftX, bottomLeftXWithShadowChunks;
-			int64_t bottomLeftZ, bottomLeftZWithShadowChunks;
-			size_t size, sizeWithShadowChunks;
+			int64_t bottomLeftX;
+			int64_t bottomLeftZ;
+			size_t size;
 		};
 
 	public:
