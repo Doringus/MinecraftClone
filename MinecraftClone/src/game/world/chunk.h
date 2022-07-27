@@ -8,7 +8,7 @@
 
 namespace game::world {
 	
-	class IChunksStorage;
+	class ChunksHashmapStorage;
 
 	constexpr int64_t get1DimChunkIndex(int64_t x, int64_t y, int64_t z, size_t height, size_t width) {
 		return(z * height * width + y * width + x);
@@ -34,8 +34,9 @@ namespace game::world {
 		chunkBox_t box;
 		utils::Container3d<uint16_t> blocks;
 		std::shared_ptr<graphics::RenderItem> renderData;
+		double m_TimeToLive = 10;
 	};
 		
-	void createChunkMesh(const IChunksStorage& storage, const BlocksDatabase& blocksDatabase, chunk_t& chunk);
+	void createChunkMesh(const ChunksHashmapStorage& storage, const BlocksDatabase& blocksDatabase, chunk_t& chunk);
 
 }

@@ -118,7 +118,8 @@ void Application::run() {
     blocksMap[3] = dirt;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
-    game::world::ChunksManager chunksManager(4, blockDatabase, std::make_unique<game::world::DummyWorldGenerator>(game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
+    game::world::WorldBox box({ -4, -4 }, 8, 1);
+    game::world::ChunksManager chunksManager(box, blockDatabase, std::make_unique<game::world::DummyWorldGenerator>(game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
         game::world::DummyWorldGenerator::BiomesConfig{}), &renderer, &tp);
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
     
@@ -132,7 +133,7 @@ void Application::run() {
      //   spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
         m_Input->update();
         camera.update(*m_Input, dt);
-        chunksManager.updateChunks(camera.position().x, camera.position().z);
+        chunksManager.update(camera.position().x, camera.position().z, dt);
 
 
         context.clearScreen(0.2, 0.2, 0.2, 1.0);

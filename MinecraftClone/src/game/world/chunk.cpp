@@ -4,7 +4,7 @@
 #include <array>
 
 #include "../../renderer/igpubuffer.h"
-#include "ichunksstorage.h"
+#include "chunkshashmapstorage.h"
 
 namespace game::world {
 
@@ -70,7 +70,7 @@ namespace game::world {
 		vertices.push_back(graphics::chunkVertex_t{ { 0.0f + x, 0.0f + y, 1.0f + z }, textureFormat.topRight }); // bottom-left front
 	}
 
-	void createChunkMesh(const IChunksStorage& storage, const BlocksDatabase& blocksDatabase, chunk_t& chunk) {
+	void createChunkMesh(const ChunksHashmapStorage& storage, const BlocksDatabase& blocksDatabase, chunk_t& chunk) {
 		/* Simple culling algorithm */
 		std::vector<graphics::chunkVertex_t> vertices;
 		std::vector<unsigned int> indices;

@@ -1,18 +1,33 @@
 #pragma once
 
-#include "ichunksstorage.h"
 
 #include <unordered_map>
+#include <optional>
+
+#include "chunk.h"
 
 namespace game::world {
 
-	class ChunksHashmapStorage : public IChunksStorage {
+	class ChunksHashmapStorage {
 	public:
-		std::optional<chunk_t*> getChunk(int64_t x, int64_t z) const override;
-		bool contains(int64_t x, int64_t z) const noexcept override;
-		std::optional<std::unique_ptr<chunk_t>> takeChunk(int64_t x, int64_t z) override;
-		void insertChunk(std::unique_ptr<chunk_t> chunk) override;
-		void removeChunk(int64_t x, int64_t z) override;
+		std::optional<chunk_t*> getChunk(int64_t x, int64_t z) const;
+		bool contains(int64_t x, int64_t z) const noexcept;
+		std::optional<std::unique_ptr<chunk_t>> takeChunk(int64_t x, int64_t z);
+		void insertChunk(std::unique_ptr<chunk_t> chunk);
+		void removeChunk(int64_t x, int64_t z);
+
+		auto erase(auto it) {
+			return m_Chunks.erase(it);
+		}
+
+		auto begin() {
+			return m_Chunks.begin();
+		}
+
+		auto end() {
+			return m_Chunks.end();
+		}
+
 	private:
 		struct chunkHash_t {
 			template <class T1, class T2>
