@@ -8,15 +8,6 @@
 
 namespace game::world {
 
-	enum class QuadFace {
-		Left,
-		Right,
-		Top,
-		Bottom,
-		Front,
-		Back
-	};
-
 	void addIndices(std::vector<unsigned int>& indices, size_t verticesSize) {
 		std::array<uint16_t, 6> indicesTemplate = {
 				0, 1, 3,
@@ -125,11 +116,6 @@ namespace game::world {
 			std::vector<unsigned int> borderIndices;
 			for (int z = 0; z < chunk.box.depth; ++z) {
 				for (int y = 0; y < chunk.box.height; ++y) {
-					// for right neighbour
-				//	if ((*borderChunk)->blocks.get(0, y, z) && !chunk.blocks.get(chunk.box.width - 1, y, z)) {
-				//		addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat((*borderChunk)->blocks.get(0, y, z)).left, borderVertices);
-				//		addIndices(borderIndices, (*borderChunk)->renderData->getVertexBuffer()->elementsCount() + borderVertices.size());
-				//	}
 					// for current chunk
 					if (!(*borderChunk)->blocks.get(0, y, z) && chunk.blocks.get(chunk.box.width - 1, y, z)) {
 						addRightFaceVertices(chunk.box.width - 1, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(chunk.box.width - 1, y, z)).right, vertices);
@@ -145,11 +131,6 @@ namespace game::world {
 			std::vector<unsigned int> borderIndices;
 			for (int z = 0; z < chunk.box.depth; ++z) {
 				for (int y = 0; y < chunk.box.height; ++y) {
-					// for left chunk
-				//	if ((*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && !chunk.blocks.get(0, y, z)) {
-				//		addRightFaceVertices(chunk.box.width - 1, y, z, blocksDatabase.getBlockTextureFormat((*borderChunk)->blocks.get(chunk.box.width - 1, y, z)).right, borderVertices);
-					//	addIndices(borderIndices, (*borderChunk)->renderData->getVertexBuffer()->elementsCount() + borderVertices.size());
-				//	}
 					// for current chunk
 					if (!(*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && chunk.blocks.get(0, y, z)) {
 						addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(0, y, z)).right, vertices);
@@ -167,11 +148,6 @@ namespace game::world {
 			std::vector<unsigned int> borderIndices;
 			for (int x = 0; x < chunk.box.width; ++x) {
 				for (int y = 0; y < chunk.box.height; ++y) {
-					// for front neighbour 
-				//	if ((*borderChunk)->blocks.get(x, y, 0) && !chunk.blocks.get(x, y, chunk.box.depth - 1)) {
-				//		addBackFaceVertices(x, y, 0, blocksDatabase.getBlockTextureFormat((*borderChunk)->blocks.get(x, y, 0)).back, borderVertices);
-				//		addIndices(borderIndices, (*borderChunk)->renderData->getVertexBuffer()->elementsCount() + borderVertices.size());
-				//	}
 					// for current chunk
 					if (!(*borderChunk)->blocks.get(x, y, 0) && chunk.blocks.get(x, y, chunk.box.depth - 1)) {
 						addFrontFaceVertices(x, y, chunk.box.depth - 1, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, chunk.box.depth - 1)).front, vertices);
@@ -189,11 +165,6 @@ namespace game::world {
 			std::vector<unsigned int> borderIndices;
 			for (int x = 0; x < chunk.box.width; ++x) {
 				for (int y = 0; y < chunk.box.height; ++y) {
-					// for back neighbour
-				//	if ((*borderChunk)->blocks.get(x, y, chunk.box.depth - 1) && !chunk.blocks.get(x, y, 0)) {
-					//	addFrontFaceVertices(x, y, chunk.box.depth - 1, blocksDatabase.getBlockTextureFormat((*borderChunk)->blocks.get(x, y, chunk.box.depth - 1)).front, borderVertices);
-					//	addIndices(borderIndices, (*borderChunk)->renderData->getVertexBuffer()->elementsCount() + borderVertices.size());
-				//	}
 					// for current chunk
 					if (!(*borderChunk)->blocks.get(x, y, chunk.box.depth - 1) && chunk.blocks.get(x, y, 0)) {
 						addBackFaceVertices(x, y, 0, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, 0)).back, vertices);

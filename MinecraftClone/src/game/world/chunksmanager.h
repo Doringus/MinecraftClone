@@ -22,6 +22,7 @@ namespace glm {
 namespace game::world {
 
 	class IWorldGenerator;
+	class IChunksLoader;
 
 	class WorldBox {
 	public:
@@ -88,20 +89,9 @@ namespace game::world {
 	};
 
 	class ChunksManager {
-
-		struct worldBox_t {
-
-			worldBox_t(int64_t bottomLeftX, int64_t bottomLeftZ, size_t size) : bottomLeftX(bottomLeftX), shadowBottomLeftX(bottomLeftX - 1),
-				bottomLeftZ(bottomLeftZ), shadowBottomLeftZ(bottomLeftZ - 1), size(size) {}
-
-			int64_t bottomLeftX, shadowBottomLeftX;
-			int64_t bottomLeftZ, shadowBottomLeftZ;
-			size_t size;
-		};
-
 	public:
-		ChunksManager(const WorldBox& worldBox, const BlocksDatabase& blocksDatabase, 
-			std::unique_ptr<IWorldGenerator> worldGenerator, graphics::ChunkRenderer* renderer, utils::ThreadPool* threadPool) noexcept;
+		ChunksManager(const WorldBox& worldBox, const BlocksDatabase& blocksDatabase, std::unique_ptr<IChunksLoader> chunksLoader,
+			graphics::ChunkRenderer* renderer, utils::ThreadPool* threadPool) noexcept;
 
 		void update(int64_t x, int64_t z, double dt);
 		void submitChunksToRenderer();
@@ -112,13 +102,13 @@ namespace game::world {
 		void updateExpiringChunks(double dt);
 		void updateWorldChunks();
 	private:
-		ChunksHashmapStorage m_ChunksStorage, m_ExpiringChunks;
 		BlocksDatabase m_BlocksDatabase;
+		ChunksHashmapStorage m_ChunksStorage, m_ExpiringChunks;
 		WorldBox m_WorldBox;
 		int64_t m_CurrentChunkX = 0, m_CurrentChunkZ = 0;
 		graphics::ChunkRenderer* m_Renderer;
 		utils::ThreadPool* m_ThreadPool;
-		std::unique_ptr<IWorldGenerator> m_WorldGenerator;
+		std::unique_ptr<IChunksLoader> m_ChunksLoader;
 	};
 
 }

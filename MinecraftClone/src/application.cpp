@@ -23,6 +23,7 @@
 #include "game/world/chunksmanager.h"
 #include "game/world/dummyworldgenerator.h"
 #include "threading/threadpool.h"
+#include "game/world/singleplayerchunksloader.h"
 
 #include "utils.h"
 
@@ -118,9 +119,11 @@ void Application::run() {
     blocksMap[3] = dirt;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
-    game::world::WorldBox box({ -4, -4 }, 8, 1);
-    game::world::ChunksManager chunksManager(box, blockDatabase, std::make_unique<game::world::DummyWorldGenerator>(game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
-        game::world::DummyWorldGenerator::BiomesConfig{}), &renderer, &tp);
+    game::world::WorldBox box({ -2, -2 }, 4, 1);
+    auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::DummyWorldGenerator>(
+        game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
+        game::world::DummyWorldGenerator::BiomesConfig{}));
+    game::world::ChunksManager chunksManager(box, blockDatabase, std::move(chunksLoader), &renderer, &tp);
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
     
     double dt = 1.0 / 60.0;

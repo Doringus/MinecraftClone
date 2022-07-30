@@ -6,6 +6,9 @@
 #include "blocksdatabase.h"
 #include "../../container3d.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 namespace game::world {
 	
 	class ChunksHashmapStorage;
@@ -35,6 +38,14 @@ namespace game::world {
 		utils::Container3d<uint16_t> blocks;
 		std::shared_ptr<graphics::RenderItem> renderData;
 		double m_TimeToLive = 10;
+
+	private:
+		friend class boost::serialization::access;
+
+		template <typename Archive>
+		void serialize(Archive& ar, const unsigned int version) {
+			ar & blocks;
+		}
 	};
 		
 	void createChunkMesh(const ChunksHashmapStorage& storage, const BlocksDatabase& blocksDatabase, chunk_t& chunk);

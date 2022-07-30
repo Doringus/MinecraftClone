@@ -4,9 +4,12 @@
 #include "../../renderer/chunkrenderer.h"
 #include "dummyworldgenerator.h"
 #include "../../../vendor/glm/ext/matrix_transform.hpp"
+#include "ichunksloader.h"
 
 #include <chrono>
+#include <fstream>
 #include <spdlog/spdlog.h>
+#include <sstream>
 
 #include "../../threading/threadpool.h"
 
@@ -20,20 +23,20 @@ namespace game::world {
 		}
 	}
 
-	ChunksManager::ChunksManager(const WorldBox& worldBox, const BlocksDatabase& blocksDatabase, std::unique_ptr<IWorldGenerator> worldGenerator,
-							     graphics::ChunkRenderer* renderer, utils::ThreadPool* threadPool) noexcept :
-								 m_WorldBox(worldBox), m_BlocksDatabase(blocksDatabase), m_WorldGenerator(std::move(worldGenerator)),
+	ChunksManager::ChunksManager(const WorldBox& worldBox, const BlocksDatabase& blocksDatabase, std::unique_ptr<IChunksLoader> chunksLoader,
+		graphics::ChunkRenderer* renderer, utils::ThreadPool* threadPool) noexcept :
+								 m_WorldBox(worldBox), m_BlocksDatabase(blocksDatabase), m_ChunksLoader(std::move(chunksLoader)),
 								 m_Renderer(renderer), m_ThreadPool(threadPool) {
 
 		auto t1 = std::chrono::steady_clock::now();
 		std::vector<std::future<void>> chunkTasks;
 		chunkTasks.reserve((m_WorldBox.size() + m_WorldBox.shadowArea()) << 1);
 		std::vector<std::unique_ptr<chunk_t>> worldChunks;
-		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i < m_WorldBox.bottomRightShadow().x; ++i) {
-			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j < m_WorldBox.topRightShadow().y; ++j) {
+		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i <= m_WorldBox.bottomRightShadow().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j <= m_WorldBox.topRightShadow().y; ++j) {
 				auto chunk = createEmptyChunk({ i, j, 16, 256, 16 });
 				auto task = m_ThreadPool->submit([this, i, j, chunkPtr = chunk.get()]() {
-					chunkPtr->blocks = m_WorldGenerator->createChunk(chunkPtr->box);
+					chunkPtr->blocks = m_ChunksLoader->loadChunkBlocks(chunkPtr->box);
 					chunkPtr->renderData->setModelMatrix(glm::translate(glm::mat4(1.0), glm::vec3(chunkPtr->box.xGrid * int64_t(chunkPtr->box.width),
 						0, chunkPtr->box.zGrid * int64_t(chunkPtr->box.depth))));
 				});
@@ -69,12 +72,13 @@ namespace game::world {
 			m_CurrentChunkX = chunkX;
 			m_CurrentChunkZ = chunkZ;
 			m_WorldBox.setBottomLeftCorner({ m_WorldBox.bottomLeft().x + offsetX, m_WorldBox.bottomLeft().y + offsetZ });
+			updateWorldChunks();
 		}
 	}
 
 	void ChunksManager::submitChunksToRenderer() {
-		for (int64_t i = m_WorldBox.bottomLeft().x; i < m_WorldBox.bottomRight().x; ++i) {
-			for (int64_t j = m_WorldBox.bottomLeft().y; j < m_WorldBox.topRight().y; ++j) {
+		for (int64_t i = m_WorldBox.bottomLeft().x; i <= m_WorldBox.bottomRight().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeft().y; j <= m_WorldBox.topRight().y; ++j) {
 				m_Renderer->submit(m_ChunksStorage.getChunk(i, j).value()->renderData);
 			}
 		}
@@ -92,7 +96,7 @@ namespace game::world {
 	void ChunksManager::addExpiringChunks(int64_t offsetX, int64_t offsetZ) {
 		if (offsetX > 0) {
 			for (int64_t i = m_WorldBox.bottomLeftShadow().x; i < m_WorldBox.bottomLeftShadow().x + offsetX; ++i) {
-				for (int64_t j = m_WorldBox.bottomLeftShadow().y; j < m_WorldBox.topLeftShadow().y; ++j) {
+				for (int64_t j = m_WorldBox.bottomLeftShadow().y; j <= m_WorldBox.topLeftShadow().y; ++j) {
 					if (auto chunk = m_ChunksStorage.takeChunk(i, j); chunk) {
 						m_ExpiringChunks.insertChunk(std::move(*chunk));
 					}
@@ -100,7 +104,7 @@ namespace game::world {
 			}
 		} else {
 			for (int64_t i = m_WorldBox.bottomRightShadow().x + offsetX; i < m_WorldBox.bottomRightShadow().x; ++i) {
-				for (int64_t j = m_WorldBox.bottomRightShadow().y; j < m_WorldBox.topRightShadow().y; ++j) {
+				for (int64_t j = m_WorldBox.bottomRightShadow().y; j <= m_WorldBox.topRightShadow().y; ++j) {
 					if (auto chunk = m_ChunksStorage.takeChunk(i, j); chunk) {
 						m_ExpiringChunks.insertChunk(std::move(*chunk));
 					}
@@ -110,7 +114,7 @@ namespace game::world {
 
 		if (offsetZ > 0) {
 			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j < m_WorldBox.bottomLeftShadow().y + offsetZ; ++j) {
-				for (int64_t i = m_WorldBox.bottomLeftShadow().x; i < m_WorldBox.bottomRightShadow().x; ++i) {
+				for (int64_t i = m_WorldBox.bottomLeftShadow().x; i <= m_WorldBox.bottomRightShadow().x; ++i) {
 					if (auto chunk = m_ChunksStorage.takeChunk(i, j); chunk) {
 						m_ExpiringChunks.insertChunk(std::move(*chunk));
 					}
@@ -118,7 +122,7 @@ namespace game::world {
 			}
 		} else {
 			for (int64_t j = m_WorldBox.topLeftShadow().y + offsetZ; j < m_WorldBox.topLeftShadow().y; ++j) {
-				for (int64_t i = m_WorldBox.bottomLeftShadow().x; i < m_WorldBox.bottomRightShadow().x; ++i) {
+				for (int64_t i = m_WorldBox.bottomLeftShadow().x; i <= m_WorldBox.bottomRightShadow().x; ++i) {
 					if (auto chunk = m_ChunksStorage.takeChunk(i, j); chunk) {
 						m_ExpiringChunks.insertChunk(std::move(*chunk));
 					}
@@ -135,25 +139,24 @@ namespace game::world {
 		for (auto it = m_ExpiringChunks.begin(); it != m_ExpiringChunks.end();) {
 			if (it->second->m_TimeToLive < 0) {
 				spdlog::info("Erasing chunk x: {0}, y: {1}", it->second->box.xGrid, it->second->box.zGrid);
+				m_ChunksLoader->storeChunk(std::move((*it).second));
 				it = m_ExpiringChunks.erase(it);
-				
 			} else {
 				it++;
 			}
 		}
-
 	}
 
 	void ChunksManager::updateWorldChunks() {
 		std::vector<std::future<void>> chunkTasks;
 		std::vector<chunk_t*> worldChunks;
-		for (int64_t i = m_WorldBox.bottomLeft().x; i < m_WorldBox.bottomRight().x; ++i) {
-			for (int64_t j = m_WorldBox.bottomLeft().y; j < m_WorldBox.topRight().y; ++j) {
-				if (!m_ChunksStorage.contains(i, j)) {
+		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i <= m_WorldBox.bottomRightShadow().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j <= m_WorldBox.topRightShadow().y; ++j) {
+				if (!m_ChunksStorage.contains(i, j) && !m_ExpiringChunks.contains(i, j)) {
 					auto chunk = createEmptyChunk({ i, j, 16, 256, 16 });
 					auto task = m_ThreadPool->submit([this, i, j, chunkPtr = chunk.get()]() {
 
-						chunkPtr->blocks = m_WorldGenerator->createChunk(chunkPtr->box);
+						chunkPtr->blocks = m_ChunksLoader->loadChunkBlocks(chunkPtr->box);
 						chunkPtr->renderData->setModelMatrix(glm::translate(glm::mat4(1.0), glm::vec3(chunkPtr->box.xGrid* int64_t(chunkPtr->box.width),
 							0, chunkPtr->box.zGrid* int64_t(chunkPtr->box.depth))));
 					});
@@ -162,7 +165,12 @@ namespace game::world {
 					worldChunks.push_back(chunk.get());
 					m_ChunksStorage.insertChunk(std::move(chunk));
 				} else {
-					auto chunk = m_ChunksStorage.getChunk(i, j);
+					std::optional<chunk_t*> chunk;
+					if (chunk = m_ChunksStorage.getChunk(i, j); !chunk) {
+						auto chunkPtr = m_ExpiringChunks.takeChunk(i, j);
+						chunk = (*chunkPtr).get();
+						m_ChunksStorage.insertChunk(std::move(*chunkPtr));
+					}
 					if ((*chunk)->renderData->getVertexBuffer()->elementsCount() == 0) {
 						worldChunks.push_back(*chunk);
 					}

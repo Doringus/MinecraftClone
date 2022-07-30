@@ -17,6 +17,7 @@
     <ClCompile Include="src\game\world\chunkshashmapstorage.cpp" />
     <ClCompile Include="src\game\world\chunksmanager.cpp" />
     <ClCompile Include="src\game\world\dummyworldgenerator.cpp" />
+    <ClCompile Include="src\game\world\singleplayerchunksloader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\glfw\glfwinputmapper.cpp" />
     <ClCompile Include="src\platform\glfw\glfwwindow.cpp" />
@@ -51,9 +52,11 @@
     <ClInclude Include="src\game\world\chunk.h" />
     <ClInclude Include="src\game\world\chunkshashmapstorage.h" />
     <ClInclude Include="src\game\world\chunksmanager.h" />
+    <ClInclude Include="src\game\world\ichunksloader.h" />
     <ClInclude Include="src\game\world\ichunksstorage.h" />
     <ClInclude Include="src\game\world\dummyworldgenerator.h" />
     <ClInclude Include="src\game\world\iworldgenerator.h" />
+    <ClInclude Include="src\game\world\singleplayerchunksloader.h" />
     <ClInclude Include="src\game\world\terrainmanager.h" />
     <ClInclude Include="src\platform\glfw\input.h" />
     <ClInclude Include="src\iwindow.h" />
@@ -142,7 +145,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SPDLOG_USE_STD_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoiseLite;E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoise2\include;..\Dependencies\glfw\include;..\Dependencies\glew\include;..\Dependencies\libnoise\include;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Programming\boost\boost_1_79_0;E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoiseLite;E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoise2\include;..\Dependencies\glfw\include;..\Dependencies\glew\include;..\Dependencies\libnoise\include;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -151,7 +154,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;libnoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoise2\lib;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\lib;..\Dependencies\glfw\lib;..\Dependencies\glew\lib;..\Dependencies\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\Programming\boost\boost_1_79_0\bin\x64\lib\;E:\Programming\Minecraft\MinecraftClone\Dependencies\FastNoise2\lib;E:\Programming\Minecraft\MinecraftClone\Dependencies\spdlog\lib;..\Dependencies\glfw\lib;..\Dependencies\glew\lib;..\Dependencies\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

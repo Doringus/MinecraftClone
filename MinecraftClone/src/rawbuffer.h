@@ -4,7 +4,7 @@ namespace utils {
 
 	class RawBuffer {
 	public:
-		RawBuffer(size_t capacity = 512);
+		RawBuffer(size_t capacity = 112900);
 		~RawBuffer() noexcept;
 
 		void submitData(void* data, size_t size);
