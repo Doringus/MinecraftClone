@@ -3,16 +3,18 @@
 #include "../../vendor/glm/vec3.hpp"
 #include "../../vendor/glm/matrix.hpp"
 
-
 class Input;
+
+namespace game {
+	struct transformComponent_t;
+}
 
 namespace graphics {
 
 	class Camera {
 	public:
 		Camera() = default;
-		Camera(const glm::mat4& projection, const glm::vec3& position = glm::vec3(0.f, 0.f, 0.f),
-			const glm::vec3& front = glm::vec3(0.f, 0.f, -1.f), const glm::vec3& up = glm::vec3(0.f, 1.f, 0.f)) noexcept;
+		Camera(const glm::mat4& projection) noexcept;
 
 		// returns projection * view matrix
 		glm::mat4 calculateCameraMatrix() const noexcept;
@@ -20,13 +22,12 @@ namespace graphics {
 		glm::mat4 getProjectionMatrix() const noexcept;
 		glm::vec3 position() const noexcept;
 
-		void update(const Input& input, float dt);
+		void attachToObject(game::transformComponent_t* transformComponent) noexcept;
+		
+		void update();
 
 	private:
-		double m_Pitch, m_Yaw;
-		glm::vec3 m_Position;
-		glm::vec3 m_Front;
-		glm::vec3 m_Up;
+		game::transformComponent_t* m_TransformComponent{nullptr};
 		glm::mat4 m_ProjectionMatrix, m_ViewMatrix;
 	};
 

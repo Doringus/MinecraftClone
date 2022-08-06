@@ -24,6 +24,7 @@
 #include "game/world/dummyworldgenerator.h"
 #include "threading/threadpool.h"
 #include "game/world/singleplayerchunksloader.h"
+#include "game/player.h"
 
 #include "utils.h"
 
@@ -56,35 +57,7 @@ void Application::run() {
 
     using namespace std::chrono_literals;
     utils::ThreadPool tp(4);
-    /*  tp.submit([]() {
-        spdlog::info("Task 1 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-    });
-    tp.submit([]() {
-        spdlog::info("Task 2 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-        });
-    tp.submit([]() {
-        spdlog::info("Task 3 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-        });
-    tp.submit([]() {
-        spdlog::info("Task 4 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-        });
-    tp.submit([]() {
-        spdlog::info("Task 5 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-        });
-    tp.submit([]() {
-        spdlog::info("Task 6 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-        });
-    tp.submit([]() {
-        spdlog::info("Task 7 {0}", std::chrono::system_clock::now());
-        std::this_thread::sleep_for(2000ms);
-        });
-        */
+  
     graphics::opengl::OpenglRendererContext context;
     graphics::opengl::OpenglChunkRenderer renderer;
     graphics::opengl::OpenglSkyboxRenderer skyboxRenderer;
@@ -124,8 +97,9 @@ void Application::run() {
         game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
         game::world::DummyWorldGenerator::BiomesConfig{}));
     game::world::ChunksManager chunksManager(box, blockDatabase, std::move(chunksLoader), &renderer, &tp);
-    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f), glm::vec3(0.0, 160.0, 0.0));
-    
+    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
+    game::Player player(glm::vec3(0.0, 160.0, 0.0), &camera);
+
     double dt = 1.0 / 60.0;
     double beginTicks = glfwGetTimerValue();
     
@@ -135,7 +109,8 @@ void Application::run() {
        // spdlog::info("Frame time {0}ms", dt * 1000);
      //   spdlog::info("x {0}, y{1}, z{2}",  camera.position().x, camera.position().y, camera.position().z);
         m_Input->update();
-        camera.update(*m_Input, dt);
+        player.update(*m_Input, dt);
+        camera.update();
         chunksManager.update(camera.position().x, camera.position().z, dt);
 
 
