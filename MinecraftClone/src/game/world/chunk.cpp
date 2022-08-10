@@ -112,40 +112,31 @@ namespace game::world {
 
 		//Right border
 		if (auto borderChunk = storage.getChunk(chunk.box.xGrid + 1, chunk.box.zGrid); borderChunk) {
-			std::vector<graphics::chunkVertex_t> borderVertices;
-			std::vector<unsigned int> borderIndices;
 			for (int z = 0; z < chunk.box.depth; ++z) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
 					if (!(*borderChunk)->blocks.get(0, y, z) && chunk.blocks.get(chunk.box.width - 1, y, z)) {
 						addRightFaceVertices(chunk.box.width - 1, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(chunk.box.width - 1, y, z)).right, vertices);
-					}
-				}
-			}
-			(*borderChunk)->renderData->getVertexBuffer()->appendData(borderVertices.size() * sizeof(graphics::chunkVertex_t), borderVertices.data());
-			(*borderChunk)->renderData->getIndexBuffer()->appendData(borderIndices.size() * sizeof(unsigned int), borderIndices.data());
-		}
-		//Left border
-		if (auto borderChunk = storage.getChunk(chunk.box.xGrid - 1, chunk.box.zGrid); borderChunk) {
-			std::vector<graphics::chunkVertex_t> borderVertices;
-			std::vector<unsigned int> borderIndices;
-			for (int z = 0; z < chunk.box.depth; ++z) {
-				for (int y = 0; y < chunk.box.height; ++y) {
-					// for current chunk
-					if (!(*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && chunk.blocks.get(0, y, z)) {
-						addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(0, y, z)).right, vertices);
 						addIndices(indices, vertices.size());
 					}
 				}
 			}
-			(*borderChunk)->renderData->getVertexBuffer()->appendData(borderVertices.size() * sizeof(graphics::chunkVertex_t), borderVertices.data());
-			(*borderChunk)->renderData->getIndexBuffer()->appendData(borderIndices.size() * sizeof(unsigned int), borderIndices.data());
+		}
+		//Left border
+		if (auto borderChunk = storage.getChunk(chunk.box.xGrid - 1, chunk.box.zGrid); borderChunk) {
+			for (int z = 0; z < chunk.box.depth; ++z) {
+				for (int y = 0; y < chunk.box.height; ++y) {
+					// for current chunk
+					if (!(*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && chunk.blocks.get(0, y, z)) {
+						addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(0, y, z)).left, vertices);
+						addIndices(indices, vertices.size());
+					}
+				}
+			}
 		}
 
 		// front border
 		if (auto borderChunk = storage.getChunk(chunk.box.xGrid, chunk.box.zGrid + 1); borderChunk) {
-			std::vector<graphics::chunkVertex_t> borderVertices;
-			std::vector<unsigned int> borderIndices;
 			for (int x = 0; x < chunk.box.width; ++x) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
@@ -155,14 +146,9 @@ namespace game::world {
 					}
 				}
 			}
-			(*borderChunk)->renderData->getVertexBuffer()->appendData(borderVertices.size() * sizeof(graphics::chunkVertex_t), borderVertices.data());
-			(*borderChunk)->renderData->getIndexBuffer()->appendData(borderIndices.size() * sizeof(unsigned int), borderIndices.data());
 		}
-
 		// back border
 		if (auto borderChunk = storage.getChunk(chunk.box.xGrid, chunk.box.zGrid - 1); borderChunk) {
-			std::vector<graphics::chunkVertex_t> borderVertices;
-			std::vector<unsigned int> borderIndices;
 			for (int x = 0; x < chunk.box.width; ++x) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
@@ -172,10 +158,7 @@ namespace game::world {
 					}
 				}
 			}
-			(*borderChunk)->renderData->getVertexBuffer()->appendData(borderVertices.size() * sizeof(graphics::chunkVertex_t), borderVertices.data());
-			(*borderChunk)->renderData->getIndexBuffer()->appendData(borderIndices.size() * sizeof(unsigned int), borderIndices.data());
 		}
-
 		chunk.renderData->getVertexBuffer()->appendData(vertices.size() * sizeof(graphics::chunkVertex_t), vertices.data());
 		chunk.renderData->getIndexBuffer()->appendData(indices.size() * sizeof(unsigned int), indices.data());
 	}

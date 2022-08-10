@@ -55,6 +55,8 @@
     <ClInclude Include="src\game\world\chunk.h" />
     <ClInclude Include="src\game\world\chunkshashmapstorage.h" />
     <ClInclude Include="src\game\world\chunksmanager.h" />
+    <ClInclude Include="src\game\world\generators\dummy\biomesmap.h" />
+    <ClInclude Include="src\game\world\generators\dummy\ibiome.h" />
     <ClInclude Include="src\game\world\ichunksloader.h" />
     <ClInclude Include="src\game\world\dummyworldgenerator.h" />
     <ClInclude Include="src\game\world\iworldgenerator.h" />

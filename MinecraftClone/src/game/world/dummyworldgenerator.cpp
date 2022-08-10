@@ -29,7 +29,7 @@ namespace game::world {
 		m_HeightGenerator.SetNoiseType(FastNoiseLite::NoiseType::NoiseType_OpenSimplex2);
 		m_HeightGenerator.SetSeed(noiseConfig.heightSeed);
 		m_HeightGenerator.SetRotationType3D(FastNoiseLite::RotationType3D::RotationType3D_None);
-		m_HeightGenerator.SetFrequency(0.003);
+		m_HeightGenerator.SetFrequency(0.02);
 		m_HeightGenerator.SetFractalType(FastNoiseLite::FractalType::FractalType_FBm);
 		m_HeightGenerator.SetFractalOctaves(5);
 		m_HeightGenerator.SetFractalLacunarity(1.8);

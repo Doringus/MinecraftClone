@@ -93,6 +93,8 @@ namespace game::world {
 		ChunksManager(const WorldBox& worldBox, const BlocksDatabase& blocksDatabase, std::unique_ptr<IChunksLoader> chunksLoader,
 			graphics::ChunkRenderer* renderer, utils::ThreadPool* threadPool) noexcept;
 
+		uint8_t getBlockAt(int64_t x, int64_t y, int64_t z);
+
 		void update(int64_t x, int64_t z, double dt);
 		void submitChunksToRenderer();
 	private:

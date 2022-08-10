@@ -61,6 +61,13 @@ namespace game::world {
 		spdlog::info("World created {0}", elapsed_ms.count());
 	}
 
+	uint8_t ChunksManager::getBlockAt(int64_t x, int64_t y, int64_t z) {
+		int64_t chunkX = getChunkCoord(x, 16);
+		int64_t chunkZ = getChunkCoord(z, 16);
+		auto chunk = *m_ChunksStorage.getChunk(x, z);
+		return chunk->blocks.get(std::abs(x) % 16, std::abs(y) % 16, std::abs(z) % 16);
+	}
+
 	void ChunksManager::update(int64_t x, int64_t z, double dt) {
 		updateExpiringChunks(dt);
 		int64_t chunkX = getChunkCoord(x, 16);
@@ -150,8 +157,8 @@ namespace game::world {
 	void ChunksManager::updateWorldChunks() {
 		std::vector<std::future<void>> chunkTasks;
 		std::vector<chunk_t*> worldChunks;
-		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i <= m_WorldBox.bottomRightShadow().x; ++i) {
-			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j <= m_WorldBox.topRightShadow().y; ++j) {
+		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i < m_WorldBox.bottomRightShadow().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j < m_WorldBox.topRightShadow().y; ++j) {
 				if (!m_ChunksStorage.contains(i, j) && !m_ExpiringChunks.contains(i, j)) {
 					auto chunk = createEmptyChunk({ i, j, 16, 256, 16 });
 					auto task = m_ThreadPool->submit([this, i, j, chunkPtr = chunk.get()]() {
@@ -179,12 +186,21 @@ namespace game::world {
 		}
 		utils::waitForAllTasks(chunkTasks);
 		chunkTasks.clear();
-		for (auto& chunk : worldChunks) {
+		for (int64_t i = m_WorldBox.bottomLeft().x; i < m_WorldBox.bottomRight().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeft().y; j < m_WorldBox.topRight().y; ++j) {
+				auto chunk = m_ChunksStorage.getChunk(i, j);
+				auto task = m_ThreadPool->submit([this, chunk]() {
+					createChunkMesh(m_ChunksStorage, m_BlocksDatabase, **chunk);
+					});
+				chunkTasks.push_back(std::move(task));
+			}
+		}
+	/*	for (auto& chunk : worldChunks) {
 			auto task = m_ThreadPool->submit([this, chunk]() {
 				createChunkMesh(m_ChunksStorage, m_BlocksDatabase, *chunk);
 			});
 			chunkTasks.push_back(std::move(task));
-		}
+		}*/
 	//	utils::waitForAllTasks(chunkTasks);
 	}
 

@@ -50,7 +50,7 @@ namespace game::world {
 			boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
 			in.push(boost::iostreams::zlib_decompressor());
 			in.push(file);
-			boost::archive::text_iarchive ia{ file };
+			boost::archive::binary_iarchive ia{ in };
 			ia >> result;
 		}
 		return result;

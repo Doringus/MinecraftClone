@@ -18,16 +18,16 @@ namespace game {
 
 	void Player::update(const Input& input, float dt) {
 		if (input.isKeyPressed(GameKey::KEY_W)) {
-			m_TransformComponent.position += (3.f * dt) * m_TransformComponent.front;
+			m_TransformComponent.position += (6.f * dt) * m_TransformComponent.front;
 		}
 		if (input.isKeyPressed(GameKey::KEY_S)) {
-			m_TransformComponent.position -= (3.f * dt) * m_TransformComponent.front;
+			m_TransformComponent.position -= (6.f * dt) * m_TransformComponent.front;
 		}
 		if (input.isKeyPressed(GameKey::KEY_A)) {
-			m_TransformComponent.position -= glm::normalize(glm::cross(m_TransformComponent.front, m_TransformComponent.up)) * (3.f * dt);
+			m_TransformComponent.position -= glm::normalize(glm::cross(m_TransformComponent.front, m_TransformComponent.up)) * (6.f * dt);
 		}
 		if (input.isKeyPressed(GameKey::KEY_D)) {
-			m_TransformComponent.position += glm::normalize(glm::cross(m_TransformComponent.front, m_TransformComponent.up)) * (3.f * dt);
+			m_TransformComponent.position += glm::normalize(glm::cross(m_TransformComponent.front, m_TransformComponent.up)) * (6.f * dt);
 		}
 		/* Rotate camera */
 		auto currentPosition = input.getCurrentMousePosition();
@@ -51,7 +51,7 @@ namespace game {
 	}
 
 	void Player::checkCollisionWithWorld(const world::ChunksManager& chunksManager) {
-
+		
 	}
 
 }
