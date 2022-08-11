@@ -1,6 +1,6 @@
 #include "singleplayerchunksloader.h"
 
-#include "iworldgenerator.h"
+#include "generators/iworldgenerator.h"
 
 #include <sstream>
 #include <fstream>

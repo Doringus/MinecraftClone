@@ -21,7 +21,7 @@
 
 #include "game/world/chunk.h"
 #include "game/world/chunksmanager.h"
-#include "game/world/dummyworldgenerator.h"
+#include "game/world/generators/dummy/dummyworldgenerator.h"
 #include "threading/threadpool.h"
 #include "game/world/singleplayerchunksloader.h"
 #include "game/player.h"
@@ -64,38 +64,82 @@ void Application::run() {
 
     game::world::BlocksMap blocksMap;
     game::world::blockTextureFormat_t tree {
-    game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // front
-    game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // back
-    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // left
-    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // right
-    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, //top
-    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f}, {0.2f, 0.0f}} // bottom
+    game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.5f}, {0.0f, 0.5f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.0f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.5f}, {0.0f, 0.5f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.5f}, {0.2f, 0.5f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.5f}, {0.2f, 0.5f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.5f}, {0.2f, 0.5f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.2f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.5f}, {0.2f, 0.5f}} // bottom
     };
     game::world::blockTextureFormat_t grass {
-    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // front
-    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // back
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // left
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // right
-    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, //top
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}} // bottom
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.4f, 0.5f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.4f, 0.5f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.2f, 1.0f}, {0.2f, 0.5f}, {0.4f, 0.5f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}} // bottom
     };
     game::world::blockTextureFormat_t dirt {    
-    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // front
-    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // back
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // left
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // right
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, //top
-    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.0f}, {0.6f, 0.0f}} // bottom
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.4f, 0.5f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.4f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.4f, 0.5f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.4f, 1.0f}, {0.4f, 0.5f}, {0.6f, 0.5f}} // bottom
     };
+    game::world::blockTextureFormat_t stone{
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.8f, 1.0f}, {0.8f, 0.5f}, {0.6f, 0.5f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.6f, 1.0f}, {0.8f, 1.0f}, {0.8f, 0.5f}, {0.6f, 0.5f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.8f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.8f, 0.5f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.8f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.8f, 0.5f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.8f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.8f, 0.5f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.8f, 1.0f}, {0.6f, 1.0f}, {0.6f, 0.5f}, {0.8f, 0.5f}} // bottom
+    };
+    game::world::blockTextureFormat_t water{
+    game::world::blockFaceTextureFormat_t{{0.8f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.5f}, {0.8f, 0.5f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.8f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.5f}, {0.8f, 0.5f}}, // back
+    game::world::blockFaceTextureFormat_t{{1.0f, 1.0f}, {0.8f, 1.0f}, {0.8f, 0.5f}, {1.0f, 0.5f}}, // left
+    game::world::blockFaceTextureFormat_t{{1.0f, 1.0f}, {0.8f, 1.0f}, {0.8f, 0.5f}, {1.0f, 0.5f}}, // right
+    game::world::blockFaceTextureFormat_t{{1.0f, 1.0f}, {0.8f, 1.0f}, {0.8f, 0.5f}, {1.0f, 0.5f}}, //top
+    game::world::blockFaceTextureFormat_t{{1.0f, 1.0f}, {0.8f, 1.0f}, {0.8f, 0.5f}, {1.0f, 0.5f}} // bottom
+    };
+    game::world::blockTextureFormat_t sand{
+    game::world::blockFaceTextureFormat_t{{0.0f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.0f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.0f, 0.0f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.2f, 0.5f}, {0.0f, 0.5f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.2f, 0.5f}, {0.0f, 0.5f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.2f, 0.5f}, {0.0f, 0.5f}, {0.0f, 0.0f}, {0.2f, 0.0f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.2f, 0.5f}, {0.0f, 0.5f}, {0.0f, 0.0f}, {0.2f, 0.0f}} // bottom
+    };
+    game::world::blockTextureFormat_t snow{
+    game::world::blockFaceTextureFormat_t{{0.2f, 0.5f}, {0.4f, 0.5f}, {0.4f, 0.0f}, {0.2f, 0.0f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.2f, 0.5f}, {0.4f, 0.5f}, {0.4f, 0.0f}, {0.2f, 0.0f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.4f, 0.0f}} // bottom
+    };
+
+
     blocksMap[1] = tree;
     blocksMap[2] = grass;
     blocksMap[3] = dirt;
+    blocksMap[4] = stone;
+    blocksMap[5] = water;
+    blocksMap[6] = sand;
+    blocksMap[7] = snow;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::WorldBox box({ -2, -2 }, 4, 1);
+
+    game::world::BiomesConfig biomesConfig;
+    biomesConfig[0] = { {0.0, 1.0, 0.3, 0.7}, {2, 3, 4, 150} }; // plain
+    biomesConfig[1] = { {0.0, 1.0, 0.7, 1.0}, {6, 6, 4, 150} }; // desert
+    biomesConfig[2] = { {0.0, 1.0, 0.0, 0.3}, {7, 7, 4, 150} }; // snow
+
     auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::DummyWorldGenerator>(
         game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
-        game::world::DummyWorldGenerator::BiomesConfig{}));
+        biomesConfig));
     game::world::ChunksManager chunksManager(box, blockDatabase, std::move(chunksLoader), &renderer, &tp);
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
     game::Player player(glm::vec3(0.0, 160.0, 0.0), &camera);

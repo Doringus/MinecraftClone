@@ -1,0 +1,27 @@
+#pragma once
+
+#include <cstdint>
+#include <unordered_map>
+
+namespace game::world {
+
+	struct climateParams_t {
+		double humidityFrom, humidityTo;
+		double temperatureFrom, temperatureTo;
+	};
+
+	struct biomeBlocksConfig_t {
+		uint16_t groundBlock;
+		uint16_t undergroundBlock;
+		uint16_t undergroundLevel;
+		uint16_t mountainLevel;
+	};
+
+	struct biomeConfig_t {
+		climateParams_t climate;
+		biomeBlocksConfig_t biomesBlocks;
+	};
+
+	using BiomesConfig = std::unordered_map<uint16_t, biomeConfig_t>;
+
+}

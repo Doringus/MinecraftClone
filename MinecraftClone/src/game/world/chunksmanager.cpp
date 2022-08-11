@@ -2,7 +2,7 @@
 
 #include "chunkshashmapstorage.h"
 #include "../../renderer/chunkrenderer.h"
-#include "dummyworldgenerator.h"
+#include "generators/iworldgenerator.h"
 #include "../../../vendor/glm/ext/matrix_transform.hpp"
 #include "ichunksloader.h"
 

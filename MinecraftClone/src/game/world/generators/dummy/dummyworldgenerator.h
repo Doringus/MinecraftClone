@@ -1,7 +1,8 @@
 #pragma once
 
-#include "iworldgenerator.h"
-#include "chunk.h"
+#include "../iworldgenerator.h"
+#include "../../chunk.h"
+#include "../biomes.h"
 
 #include <FastNoiseLite.h>
 
@@ -11,25 +12,6 @@ namespace game::world {
 		
 	class DummyWorldGenerator : public IWorldGenerator {
 	public:
-
-		struct climateParams_t {
-			double humidityThreshold;
-			double temperatureThreshold;
-		};
-			
-		struct biomeBlocksConfig_t {
-			uint16_t groundBlock;
-			uint16_t undergroundBlock;
-			double undergroundLevel;
-			double mountainLevel;
-		};
-
-		struct biomeConfig_t {
-			climateParams_t climate;
-			biomeBlocksConfig_t biomesBlocks;
-		};
-
-		using BiomesConfig = std::unordered_map<uint16_t, biomeConfig_t>;
 
 		struct noiseConfig_t {
 			int humiditySeed;
