@@ -39,8 +39,8 @@ namespace game::world {
 		m_HeightGenerator.SetFractalWeightedStrength(0.0);
 	}
 
-	utils::Container3d<BlockId> DummyWorldGenerator::createChunk(const chunkBox_t& chunk) const {
-		utils::Container3d<BlockId> result(16, 256, 16);
+	utils::Container3d<uint16_t> DummyWorldGenerator::createChunk(const chunkBox_t& chunk) const {
+		utils::Container3d<uint16_t> result(16, 256, 16);
 		for (int64_t x = 0; x < chunk.width; ++x) {
 			for (int64_t z = 0; z < chunk.depth; ++z) {
 				float temperature = const_cast<DummyWorldGenerator*>(this)->m_TemperatureGenerator.GetNoise<float>(x + chunk.xGrid * int64_t(chunk.width), 
@@ -55,7 +55,7 @@ namespace game::world {
 		return result;
 	}
 
-	void DummyWorldGenerator::createColumn(utils::Container3d<BlockId>& blocks, float temperature, float humidity, float height, int x, int z) const {
+	void DummyWorldGenerator::createColumn(utils::Container3d<uint16_t>& blocks, float temperature, float humidity, float height, int x, int z) const {
 		
 		auto transform = [] (float value, float min, float max) -> float {
 			float relative = (value + 1.0f) / 2.0f;
@@ -78,17 +78,17 @@ namespace game::world {
 
 		for (int i = 0; i < worldHeight; ++i) {
 			if (i < convertedHeight) {
-				blocks.get(x, i, z) = BlockId::Stone;
+				blocks.get(x, i, z) = 4;
 			}
 			else {
 				if (columnHeight == 0) {
 					columnHeight = i;
 				}
 				if (i < waterLevel) {
-					blocks.get(x, i, z) = BlockId::Water;
+					blocks.get(x, i, z) = 5;
 				}
 				else {
-					blocks.get(x, i, z) = BlockId::Air;
+					blocks.get(x, i, z) = 0;
 				}
 			}
 		}

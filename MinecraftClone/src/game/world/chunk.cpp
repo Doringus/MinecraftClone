@@ -71,36 +71,36 @@ namespace game::world {
 					if (y == 127 && x == 0 && chunk.box.xGrid == 0 && chunk.box.zGrid == 0) {
 						int k = 0;
 					}
-					if (chunk.blocks.get(x, y, z) == BlockId::Air) {
+					if (chunk.blocks.get(x, y, z) == 0) {
 						continue;
 					}
 					//left
-					if (x > 0 && chunk.blocks.get(x - 1, y, z) == BlockId::Air) {
+					if (x > 0 && !chunk.blocks.get(x - 1, y, z)) {
 						addLeftFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).left, vertices);
 						addIndices(indices, vertices.size());
 					}
 					//right
-					if (x < chunk.box.width - 1 && chunk.blocks.get(x + 1, y, z) == BlockId::Air) {
+					if (x < chunk.box.width - 1 && !chunk.blocks.get(x + 1, y, z)) {
 						addRightFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).right, vertices);
 						addIndices(indices, vertices.size());
 					}
 					//top
-					if (y < chunk.box.height - 1 && chunk.blocks.get(x, y + 1, z) == BlockId::Air) {
+					if (y < chunk.box.height - 1 && !chunk.blocks.get(x, y + 1, z)) {
 						addTopFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).top, vertices);
 						addIndices(indices, vertices.size());
 					}
 					// bottom
-					if (y > 0 && chunk.blocks.get(x, y - 1, z) == BlockId::Air) {
+					if (y > 0 && !chunk.blocks.get(x, y - 1, z)) {
 						addBottomFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).bottom, vertices);
 						addIndices(indices, vertices.size());
 					}
 					//front
-					if (z < chunk.box.depth - 1 && chunk.blocks.get(x, y, z + 1) == BlockId::Air) {
+					if (z < chunk.box.depth - 1 && !chunk.blocks.get(x, y, z + 1)) {
 						addFrontFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).front, vertices);
 						addIndices(indices, vertices.size());
 					}
 					//back
-					if (z > 0 && chunk.blocks.get(x, y, z - 1) == BlockId::Air) {
+					if (z > 0 && !chunk.blocks.get(x, y, z - 1)) {
 						addBackFaceVertices(x, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, z)).back, vertices);
 						addIndices(indices, vertices.size());
 					}
@@ -115,7 +115,7 @@ namespace game::world {
 			for (int z = 0; z < chunk.box.depth; ++z) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
-					if ((*borderChunk)->blocks.get(0, y, z) == BlockId::Air && chunk.blocks.get(chunk.box.width - 1, y, z) != BlockId::Air) {
+					if (!(*borderChunk)->blocks.get(0, y, z) && chunk.blocks.get(chunk.box.width - 1, y, z)) {
 						addRightFaceVertices(chunk.box.width - 1, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(chunk.box.width - 1, y, z)).right, vertices);
 						addIndices(indices, vertices.size());
 					}
@@ -127,7 +127,7 @@ namespace game::world {
 			for (int z = 0; z < chunk.box.depth; ++z) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
-					if ((*borderChunk)->blocks.get(chunk.box.width - 1, y, z) == BlockId::Air && chunk.blocks.get(0, y, z) != BlockId::Air) {
+					if (!(*borderChunk)->blocks.get(chunk.box.width - 1, y, z) && chunk.blocks.get(0, y, z)) {
 						addLeftFaceVertices(0, y, z, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(0, y, z)).left, vertices);
 						addIndices(indices, vertices.size());
 					}
@@ -140,7 +140,7 @@ namespace game::world {
 			for (int x = 0; x < chunk.box.width; ++x) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
-					if ((*borderChunk)->blocks.get(x, y, 0) == BlockId::Air && chunk.blocks.get(x, y, chunk.box.depth - 1) != BlockId::Air) {
+					if (!(*borderChunk)->blocks.get(x, y, 0) && chunk.blocks.get(x, y, chunk.box.depth - 1)) {
 						addFrontFaceVertices(x, y, chunk.box.depth - 1, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, chunk.box.depth - 1)).front, vertices);
 						addIndices(indices, vertices.size());
 					}
@@ -152,7 +152,7 @@ namespace game::world {
 			for (int x = 0; x < chunk.box.width; ++x) {
 				for (int y = 0; y < chunk.box.height; ++y) {
 					// for current chunk
-					if ((*borderChunk)->blocks.get(x, y, chunk.box.depth - 1) == BlockId::Air && chunk.blocks.get(x, y, 0) != BlockId::Air) {
+					if (!(*borderChunk)->blocks.get(x, y, chunk.box.depth - 1) && chunk.blocks.get(x, y, 0)) {
 						addBackFaceVertices(x, y, 0, blocksDatabase.getBlockTextureFormat(chunk.blocks.get(x, y, 0)).back, vertices);
 						addIndices(indices, vertices.size());
 					}

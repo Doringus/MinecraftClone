@@ -61,7 +61,7 @@ namespace game::world {
 		spdlog::info("World created {0}", elapsed_ms.count());
 	}
 
-	BlockId ChunksManager::getBlockAt(int64_t x, int64_t y, int64_t z) {
+	uint8_t ChunksManager::getBlockAt(int64_t x, int64_t y, int64_t z) {
 		int64_t chunkX = getChunkCoord(x, 16);
 		int64_t chunkZ = getChunkCoord(z, 16);
 		auto chunk = *m_ChunksStorage.getChunk(x, z);
@@ -93,7 +93,7 @@ namespace game::world {
 
 	std::unique_ptr<chunk_t> ChunksManager::createEmptyChunk(const chunkBox_t& box) {
 		auto renderItem = m_Renderer->createChunkRenderData();
-		return std::make_unique<chunk_t>(box, utils::Container3d<BlockId>(box.width, box.height, box.depth), renderItem);
+		return std::make_unique<chunk_t>(box, utils::Container3d<uint16_t>(box.width, box.height, box.depth), renderItem);
 	}
 
 	std::unique_ptr<chunk_t> ChunksManager::loadChunkFromDisk() {

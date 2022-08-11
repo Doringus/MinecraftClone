@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <unordered_map>
 
-#include "../blocks.h"
-
 namespace game::world {
 
 	struct climateParams_t {
@@ -13,8 +11,8 @@ namespace game::world {
 	};
 
 	struct biomeBlocksConfig_t {
-		BlockId groundBlock;
-		BlockId undergroundBlock;
+		uint16_t groundBlock;
+		uint16_t undergroundBlock;
 		uint16_t undergroundLevel;
 		uint16_t mountainLevel;
 	};

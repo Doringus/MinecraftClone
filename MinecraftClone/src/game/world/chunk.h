@@ -9,8 +9,6 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "blocks.h"
-
 namespace game::world {
 	
 	class ChunksHashmapStorage;
@@ -33,11 +31,11 @@ namespace game::world {
 
 	struct chunk_t {
 
-		chunk_t(chunkBox_t box, utils::Container3d<BlockId> blocks, std::shared_ptr<graphics::RenderItem> renderItem) :
+		chunk_t(chunkBox_t box, utils::Container3d<uint16_t> blocks, std::shared_ptr<graphics::RenderItem> renderItem) :
 			box(std::move(box)), blocks(std::move(blocks)), renderData(std::move(renderItem)) {}
 
 		chunkBox_t box;
-		utils::Container3d<BlockId> blocks;
+		utils::Container3d<uint16_t> blocks;
 		std::shared_ptr<graphics::RenderItem> renderData;
 		double m_TimeToLive = 10;
 

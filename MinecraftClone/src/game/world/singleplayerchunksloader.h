@@ -22,10 +22,10 @@ namespace game::world {
 	public:
 		SingleplayerChunksLoader(std::unique_ptr<IWorldGenerator> worldGenerator);
 
-		utils::Container3d<BlockId> loadChunkBlocks(const chunkBox_t& box) override;
+		utils::Container3d<uint16_t> loadChunkBlocks(const chunkBox_t& box) override;
 		void storeChunk(std::unique_ptr<chunk_t> chunk) override;
 	private:
-		utils::Container3d<BlockId> loadChunkFromDisk(const chunkBox_t& box);
+		utils::Container3d<uint16_t> loadChunkFromDisk(const chunkBox_t& box);
 	private:
 		std::unique_ptr<IWorldGenerator> m_WorldGenerator;
 		std::unordered_set<std::pair<int64_t, int64_t>, chunkHash_t> m_StoredChunks;
