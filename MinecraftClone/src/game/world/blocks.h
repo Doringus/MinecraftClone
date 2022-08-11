@@ -4,14 +4,19 @@
 
 namespace game::world {
 
-	enum class BlockId : uint8_t {
+	enum class BlockType : uint8_t {
 		Air = 0,
 		Tree,
 		Grass,
 		Dirt,
 		Stone,
 		Water,
-		Sand
+		Sand,
+		Snow
 	};
+
+	static uint8_t blockTypeToRaw(const BlockType& type) {
+		return static_cast<uint8_t>(type);
+	}
 
 }

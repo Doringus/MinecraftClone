@@ -3,6 +3,8 @@
 #include <FastNoiseLite.h>
 #include <spdlog/spdlog.h>
 
+#include "../../blocks.h"
+
 namespace game::world {
 
 	DummyWorldGenerator::DummyWorldGenerator(noiseConfig_t noiseConfig, BiomesConfig biomesConfig) : m_BiomesConfig(std::move(biomesConfig)) {
@@ -78,17 +80,17 @@ namespace game::world {
 
 		for (int i = 0; i < worldHeight; ++i) {
 			if (i < convertedHeight) {
-				blocks.get(x, i, z) = 4;
+				blocks.get(x, i, z) = blockTypeToRaw(BlockType::Stone);
 			}
 			else {
 				if (columnHeight == 0) {
 					columnHeight = i;
 				}
 				if (i < waterLevel) {
-					blocks.get(x, i, z) = 5;
+					blocks.get(x, i, z) = blockTypeToRaw(BlockType::Water);
 				}
 				else {
-					blocks.get(x, i, z) = 0;
+					blocks.get(x, i, z) = blockTypeToRaw(BlockType::Air);
 				}
 			}
 		}

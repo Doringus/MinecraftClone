@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+#include "blocks.h"
+
 namespace game::world {
 
 	struct blockFaceTextureFormat_t {

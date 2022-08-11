@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <unordered_map>
 
+#include "../blocks.h"
+
 namespace game::world {
 
 	struct climateParams_t {
