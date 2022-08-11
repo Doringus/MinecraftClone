@@ -119,7 +119,14 @@ void Application::run() {
     game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.4f, 0.0f}}, //top
     game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.2f, 0.5f}, {0.2f, 0.0f}, {0.4f, 0.0f}} // bottom
     };
-
+    game::world::blockTextureFormat_t leaves{
+    game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.6f, 0.5f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // front
+    game::world::blockFaceTextureFormat_t{{0.4f, 0.5f}, {0.6f, 0.5f}, {0.6f, 0.0f}, {0.4f, 0.0f}}, // back
+    game::world::blockFaceTextureFormat_t{{0.6f, 0.5f}, {0.4f, 0.5f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // left
+    game::world::blockFaceTextureFormat_t{{0.6f, 0.5f}, {0.4f, 0.5f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, // right
+    game::world::blockFaceTextureFormat_t{{0.6f, 0.5f}, {0.4f, 0.5f}, {0.4f, 0.0f}, {0.6f, 0.0f}}, //top
+    game::world::blockFaceTextureFormat_t{{0.6f, 0.5f}, {0.4f, 0.5f}, {0.4f, 0.0f}, {0.6f, 0.0f}} // bottom
+    };
 
     blocksMap[1] = tree;
     blocksMap[2] = grass;

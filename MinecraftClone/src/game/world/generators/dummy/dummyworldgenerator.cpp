@@ -8,6 +8,16 @@
 namespace game::world {
 
 	DummyWorldGenerator::DummyWorldGenerator(noiseConfig_t noiseConfig, BiomesConfig biomesConfig) : m_BiomesConfig(std::move(biomesConfig)) {
+		m_TreeGenerator.SetNoiseType(FastNoiseLite::NoiseType::NoiseType_Value);
+		m_TreeGenerator.SetSeed(102);
+		m_TreeGenerator.SetRotationType3D(FastNoiseLite::RotationType3D::RotationType3D_None);
+		m_TreeGenerator.SetFrequency(0.111);
+		m_TreeGenerator.SetFractalType(FastNoiseLite::FractalType::FractalType_FBm);
+		m_TreeGenerator.SetFractalOctaves(2);
+		m_TreeGenerator.SetFractalLacunarity(1.8);
+		m_TreeGenerator.SetFractalGain(0.3);
+		m_TreeGenerator.SetFractalWeightedStrength(0.3);
+
 		m_HumidityGenerator.SetNoiseType(FastNoiseLite::NoiseType::NoiseType_Cellular);
 		m_HumidityGenerator.SetSeed(noiseConfig.humiditySeed);
 		m_HumidityGenerator.SetRotationType3D(FastNoiseLite::RotationType3D::RotationType3D_None);
@@ -51,13 +61,15 @@ namespace game::world {
 					z + chunk.zGrid * int64_t(chunk.depth)); /// why no const in fastnoise
 				float height = const_cast<DummyWorldGenerator*>(this)->m_HeightGenerator.GetNoise<float>((x + chunk.xGrid * int64_t(chunk.width)), 
 					(z + chunk.zGrid * int64_t(chunk.depth))); /// why no const in fastnoise
-				createColumn(result, temperature, humidity, height, x, z);
+				float tree = const_cast<DummyWorldGenerator*>(this)->m_TreeGenerator.GetNoise<float>((x + chunk.xGrid * int64_t(chunk.width)),
+					(z + chunk.zGrid * int64_t(chunk.depth))); /// why no const in fastnoise
+				createColumn(result, temperature, humidity, height, tree, x, z);
 			}
 		}
 		return result;
 	}
 
-	void DummyWorldGenerator::createColumn(utils::Container3d<uint16_t>& blocks, float temperature, float humidity, float height, int x, int z) const {
+	void DummyWorldGenerator::createColumn(utils::Container3d<uint16_t>& blocks, float temperature, float humidity, float height, float tree, int x, int z) const {
 		
 		auto transform = [] (float value, float min, float max) -> float {
 			float relative = (value + 1.0f) / 2.0f;
@@ -100,8 +112,30 @@ namespace game::world {
 				for (int i = 1; i < biome->second.biomesBlocks.undergroundLevel; ++i) {
 					blocks.get(x, columnHeight - i, z) = biome->second.biomesBlocks.undergroundBlock;
 				}
+				if (tree > 0.65 && blocks.get(x, columnHeight, z) == blockTypeToRaw(BlockType::Grass)
+					&& x < 11 && z < 11 && x >3 && z > 3) {
+					placeTree(blocks, x, columnHeight, z);
+				}
 			}
 		}
+	}
+
+	void DummyWorldGenerator::placeTree(utils::Container3d<uint16_t>& blocks, int x, int y, int z) const {
+		for (int i = 0; i < 5; ++i) {
+			blocks.get(x, y + i, z) = blockTypeToRaw(BlockType::Tree);
+		}
+
+		for (int i = -2; i < 5; ++i) {
+			for (int j = -2; j < 5; ++j) {
+				for (int k = 5; k < 7; ++k) {
+					blocks.get(x + i, y + k, z + j) = blockTypeToRaw(BlockType::Leaves);
+				}
+			}
+		}
+
+		blocks.get(x, y + 7, z) = blockTypeToRaw(BlockType::Leaves);
+		blocks.get(x, y + 8, z) = blockTypeToRaw(BlockType::Leaves);
+
 	}
 
 }

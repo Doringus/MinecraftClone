@@ -12,7 +12,8 @@ namespace game::world {
 		Stone,
 		Water,
 		Sand,
-		Snow
+		Snow,
+		Leaves
 	};
 
 	static uint8_t blockTypeToRaw(const BlockType& type) {
