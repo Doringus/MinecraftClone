@@ -6,7 +6,7 @@ namespace game::world {
 		
 	}
 
-	blockTextureFormat_t const& BlocksDatabase::getBlockTextureFormat(uint16_t blockType) const {
+	blockTextureFormat_t const& BlocksDatabase::getBlockTextureFormat(BlockId blockType) const {
 		return m_Blocks.at(blockType);
 	}
 

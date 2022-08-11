@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "../../../container3d.h"
+#include "../blocks.h"
 
 namespace game::world {
 
@@ -12,7 +13,7 @@ namespace game::world {
 	public:
 		virtual ~IWorldGenerator() noexcept = default;
 
-		virtual utils::Container3d<uint16_t> createChunk(const chunkBox_t& chunk) const = 0;
+		virtual utils::Container3d<BlockId> createChunk(const chunkBox_t& chunk) const = 0;
 	};
 
 }

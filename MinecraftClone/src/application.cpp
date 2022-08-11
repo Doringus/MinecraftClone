@@ -121,21 +121,21 @@ void Application::run() {
     };
 
 
-    blocksMap[1] = tree;
-    blocksMap[2] = grass;
-    blocksMap[3] = dirt;
-    blocksMap[4] = stone;
-    blocksMap[5] = water;
-    blocksMap[6] = sand;
-    blocksMap[7] = snow;
+    blocksMap[game::world::BlockId::Tree] = tree;
+    blocksMap[game::world::BlockId::Grass] = grass;
+    blocksMap[game::world::BlockId::Dirt] = dirt;
+    blocksMap[game::world::BlockId::Stone] = stone;
+    blocksMap[game::world::BlockId::Water] = water;
+    blocksMap[game::world::BlockId::Sand] = sand;
+    blocksMap[game::world::BlockId::Snow] = snow;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::WorldBox box({ -2, -2 }, 4, 1);
 
     game::world::BiomesConfig biomesConfig;
-    biomesConfig[0] = { {0.0, 1.0, 0.3, 0.7}, {2, 3, 4, 150} }; // plain
-    biomesConfig[1] = { {0.0, 1.0, 0.7, 1.0}, {6, 6, 4, 150} }; // desert
-    biomesConfig[2] = { {0.0, 1.0, 0.0, 0.3}, {7, 7, 4, 150} }; // snow
+    biomesConfig[0] = { {0.0, 1.0, 0.3, 0.7}, {game::world::BlockId::Grass, game::world::BlockId::Dirt, 4, 150} }; // plain
+    biomesConfig[1] = { {0.0, 1.0, 0.7, 1.0}, {game::world::BlockId::Sand, game::world::BlockId::Sand, 4, 150} }; // desert
+    biomesConfig[2] = { {0.0, 1.0, 0.0, 0.3}, {game::world::BlockId::Snow, game::world::BlockId::Snow, 4, 150} }; // snow
 
     auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::DummyWorldGenerator>(
         game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },

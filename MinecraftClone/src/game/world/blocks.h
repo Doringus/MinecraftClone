@@ -11,7 +11,8 @@ namespace game::world {
 		Dirt,
 		Stone,
 		Water,
-		Sand
+		Sand,
+		Snow
 	};
 
 }

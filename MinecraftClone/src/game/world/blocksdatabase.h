@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+#include "blocks.h"
+
 namespace game::world {
 
 	struct blockFaceTextureFormat_t {
@@ -20,7 +22,7 @@ namespace game::world {
 		blockFaceTextureFormat_t top, bottom;
 	};
 
-	using BlocksMap = std::map<uint16_t, blockTextureFormat_t>;
+	using BlocksMap = std::map<BlockId, blockTextureFormat_t>;
 
 	class BlocksDatabase {
 	public:
@@ -29,7 +31,7 @@ namespace game::world {
 		BlocksDatabase(const BlocksDatabase& other) = default;
 		BlocksDatabase(BlocksDatabase&& other) = default;
 
-		blockTextureFormat_t const& getBlockTextureFormat(uint16_t blockType) const;
+		blockTextureFormat_t const& getBlockTextureFormat(BlockId blockType) const;
 
 	private:
 		BlocksMap m_Blocks;

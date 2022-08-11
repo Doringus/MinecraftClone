@@ -22,9 +22,9 @@ namespace game::world {
 	public:
 		DummyWorldGenerator(noiseConfig_t noiseConfig, BiomesConfig biomesConfig);
 
-		utils::Container3d<uint16_t> createChunk(const chunkBox_t& chunk) const override;
+		utils::Container3d<BlockId> createChunk(const chunkBox_t& chunk) const override;
 	private:
-		void createColumn(utils::Container3d<uint16_t>& blocks, float temperature, float humidity, float height, int x, int z) const;
+		void createColumn(utils::Container3d<BlockId>& blocks, float temperature, float humidity, float height, int x, int z) const;
 
 	private:
 		FastNoiseLite m_HumidityGenerator, m_TemperatureGenerator, m_HeightGenerator;

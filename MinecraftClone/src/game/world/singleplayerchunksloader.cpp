@@ -17,7 +17,7 @@ namespace game::world {
 
 	SingleplayerChunksLoader::SingleplayerChunksLoader(std::unique_ptr<IWorldGenerator> worldGenerator) : m_WorldGenerator(std::move(worldGenerator)) { }
 
-	utils::Container3d<uint16_t> SingleplayerChunksLoader::loadChunkBlocks(const chunkBox_t& box) {
+	utils::Container3d<BlockId> SingleplayerChunksLoader::loadChunkBlocks(const chunkBox_t& box) {
 		if (!m_StoredChunks.contains({box.xGrid, box.zGrid})) {
 			return m_WorldGenerator->createChunk(box);
 		} else {
@@ -40,9 +40,9 @@ namespace game::world {
 		}	
 	}
 
-	utils::Container3d<uint16_t> SingleplayerChunksLoader::loadChunkFromDisk(const chunkBox_t& box) {
+	utils::Container3d<BlockId> SingleplayerChunksLoader::loadChunkFromDisk(const chunkBox_t& box) {
 		spdlog::info("Loading chunk {0}, {1} from disk", box.xGrid, box.zGrid);
-		utils::Container3d<uint16_t> result(16, 256, 16);
+		utils::Container3d<BlockId> result(16, 256, 16);
 		std::stringstream fileName;
 		fileName << "chunks/" << box.xGrid << "_" << box.zGrid << ".chunk";
 		std::ifstream file{ fileName.str(), std::ios::in | std::ios::binary};
