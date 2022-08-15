@@ -31,9 +31,8 @@ namespace game::world {
 		auto t1 = std::chrono::steady_clock::now();
 		std::vector<std::future<void>> chunkTasks;
 		chunkTasks.reserve((m_WorldBox.size() + m_WorldBox.shadowArea()) << 1);
-		std::vector<std::unique_ptr<chunk_t>> worldChunks;
-		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i <= m_WorldBox.bottomRightShadow().x; ++i) {
-			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j <= m_WorldBox.topRightShadow().y; ++j) {
+		for (int64_t i = m_WorldBox.bottomLeftShadow().x; i < m_WorldBox.bottomRightShadow().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeftShadow().y; j < m_WorldBox.topRightShadow().y; ++j) {
 				auto chunk = createEmptyChunk({ i, j, 16, 256, 16 });
 				auto task = m_ThreadPool->submit([this, i, j, chunkPtr = chunk.get()]() {
 					chunkPtr->blocks = m_ChunksLoader->loadChunkBlocks(chunkPtr->box);
@@ -42,17 +41,23 @@ namespace game::world {
 				});
 				
 				chunkTasks.push_back(std::move(task));
-				worldChunks.push_back(std::move(chunk));
+				m_ChunksStorage.insertChunk(std::move(chunk));
 			}
 		}
 		utils::waitForAllTasks(chunkTasks);
 		chunkTasks.clear();
-		for (auto& chunk : worldChunks) {
-			auto task = m_ThreadPool->submit([this, chunkPtr = chunk.get()]() {
-				createChunkMesh(m_ChunksStorage, m_BlocksDatabase, *chunkPtr);
-			});
-			chunkTasks.push_back(std::move(task));
-			m_ChunksStorage.insertChunk(std::move(chunk));
+
+		for (int64_t i = m_WorldBox.bottomLeft().x; i < m_WorldBox.bottomRight().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeft().y; j < m_WorldBox.topRight().y; ++j) {
+				auto chunk = m_ChunksStorage.getChunk(i, j);
+				if ((*chunk)->renderData->getIndexBuffer()->elementsCount() == 0) {
+					auto task = m_ThreadPool->submit([this, chunk]() {
+						createChunkMesh(m_ChunksStorage, m_BlocksDatabase, **chunk);
+						});
+					chunkTasks.push_back(std::move(task));
+				}
+
+			}
 		}
 		utils::waitForAllTasks(chunkTasks);
 
@@ -84,9 +89,12 @@ namespace game::world {
 	}
 
 	void ChunksManager::submitChunksToRenderer() {
-		for (int64_t i = m_WorldBox.bottomLeft().x; i <= m_WorldBox.bottomRight().x; ++i) {
-			for (int64_t j = m_WorldBox.bottomLeft().y; j <= m_WorldBox.topRight().y; ++j) {
+		for (int64_t i = m_WorldBox.bottomLeft().x; i < m_WorldBox.bottomRight().x; ++i) {
+			for (int64_t j = m_WorldBox.bottomLeft().y; j < m_WorldBox.topRight().y; ++j) {
 				m_Renderer->submit(m_ChunksStorage.getChunk(i, j).value()->renderData);
+				if (m_ChunksStorage.getChunk(i, j).value()->renderData->getIndexBuffer()->elementsCount() == 0) {
+					int k = 0;
+				}
 			}
 		}
 	}
@@ -189,10 +197,13 @@ namespace game::world {
 		for (int64_t i = m_WorldBox.bottomLeft().x; i < m_WorldBox.bottomRight().x; ++i) {
 			for (int64_t j = m_WorldBox.bottomLeft().y; j < m_WorldBox.topRight().y; ++j) {
 				auto chunk = m_ChunksStorage.getChunk(i, j);
-				auto task = m_ThreadPool->submit([this, chunk]() {
-					createChunkMesh(m_ChunksStorage, m_BlocksDatabase, **chunk);
-					});
-				chunkTasks.push_back(std::move(task));
+				if ((*chunk)->renderData->getIndexBuffer()->elementsCount() == 0) {
+					auto task = m_ThreadPool->submit([this, chunk]() {
+						createChunkMesh(m_ChunksStorage, m_BlocksDatabase, **chunk);
+						});
+					chunkTasks.push_back(std::move(task));
+				}
+				
 			}
 		}
 	/*	for (auto& chunk : worldChunks) {
@@ -201,7 +212,7 @@ namespace game::world {
 			});
 			chunkTasks.push_back(std::move(task));
 		}*/
-	//	utils::waitForAllTasks(chunkTasks);
+//	utils::waitForAllTasks(chunkTasks);
 	}
 
 }

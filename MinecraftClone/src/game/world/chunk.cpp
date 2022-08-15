@@ -65,12 +65,11 @@ namespace game::world {
 		/* Simple culling algorithm */
 		std::vector<graphics::chunkVertex_t> vertices;
 		std::vector<unsigned int> indices;
+
+			
 		for (size_t x = 0; x < chunk.box.width; ++x) {
 			for (size_t y = 0; y < chunk.box.height; ++y) {
 				for (size_t z = 0; z < chunk.box.depth; ++z) {
-					if (y == 127 && x == 0 && chunk.box.xGrid == 0 && chunk.box.zGrid == 0) {
-						int k = 0;
-					}
 					if (chunk.blocks.get(x, y, z) == 0) {
 						continue;
 					}

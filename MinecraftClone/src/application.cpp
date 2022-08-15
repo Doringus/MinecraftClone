@@ -135,6 +135,7 @@ void Application::run() {
     blocksMap[5] = water;
     blocksMap[6] = sand;
     blocksMap[7] = snow;
+    blocksMap[8] = leaves;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
     game::world::WorldBox box({ -2, -2 }, 4, 1);

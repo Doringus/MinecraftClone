@@ -83,7 +83,7 @@ namespace game::world {
 			return b.second.climate.humidityFrom < convertedHumidity && b.second.climate.humidityTo > convertedHumidity &&
 				   b.second.climate.temperatureFrom < convertedTemperature && b.second.climate.temperatureTo > convertedTemperature;
 		});
-
+		
 		int convertedHeight = static_cast<int>(transform(height, 0.f, 256.f));
 		int columnHeight = 0;
 
