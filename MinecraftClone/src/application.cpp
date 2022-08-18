@@ -22,6 +22,7 @@
 #include "game/world/chunk.h"
 #include "game/world/chunksmanager.h"
 #include "game/world/generators/dummy/dummyworldgenerator.h"
+#include "game/world/generators/cliffs/cliffsworldgenerator.h"
 #include "threading/threadpool.h"
 #include "game/world/singleplayerchunksloader.h"
 #include "game/player.h"
@@ -138,16 +139,17 @@ void Application::run() {
     blocksMap[8] = leaves;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
-    game::world::WorldBox box({ -2, -2 }, 4, 1);
+    game::world::WorldBox box({ -3, -3 }, 7, 1);
 
     game::world::BiomesConfig biomesConfig;
     biomesConfig[0] = { {0.0, 1.0, 0.3, 0.7}, {2, 3, 4, 150} }; // plain
     biomesConfig[1] = { {0.0, 1.0, 0.7, 1.0}, {6, 6, 4, 150} }; // desert
     biomesConfig[2] = { {0.0, 1.0, 0.0, 0.3}, {7, 7, 4, 150} }; // snow
-
+    /*
     auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::DummyWorldGenerator>(
         game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
-        biomesConfig));
+        biomesConfig)); */
+    auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::CliffsWorldGenerator>());
     game::world::ChunksManager chunksManager(box, blockDatabase, std::move(chunksLoader), &renderer, &tp);
     graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
     game::Player player(glm::vec3(0.0, 160.0, 0.0), &camera);

@@ -17,6 +17,7 @@
     <ClCompile Include="src\game\world\chunk.cpp" />
     <ClCompile Include="src\game\world\chunkshashmapstorage.cpp" />
     <ClCompile Include="src\game\world\chunksmanager.cpp" />
+    <ClCompile Include="src\game\world\generators\cliffs\cliffsworldgenerator.cpp" />
     <ClCompile Include="src\game\world\generators\dummy\dummyworldgenerator.cpp" />
     <ClCompile Include="src\game\world\singleplayerchunksloader.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="src\game\world\chunkshashmapstorage.h" />
     <ClInclude Include="src\game\world\chunksmanager.h" />
     <ClInclude Include="src\game\world\generators\biomes.h" />
+    <ClInclude Include="src\game\world\generators\cliffs\cliffsworldgenerator.h" />
     <ClInclude Include="src\game\world\ichunksloader.h" />
     <ClInclude Include="src\game\world\generators\dummy\dummyworldgenerator.h" />
     <ClInclude Include="src\game\world\generators\iworldgenerator.h" />

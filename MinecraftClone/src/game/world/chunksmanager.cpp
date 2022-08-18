@@ -80,11 +80,11 @@ namespace game::world {
 		int64_t offsetX = chunkX - m_CurrentChunkX;
 		int64_t offsetZ = chunkZ - m_CurrentChunkZ;
 		if (offsetX != 0 || offsetZ != 0) {
-			addExpiringChunks(offsetX, offsetZ);
-			m_CurrentChunkX = chunkX;
-			m_CurrentChunkZ = chunkZ;
-			m_WorldBox.setBottomLeftCorner({ m_WorldBox.bottomLeft().x + offsetX, m_WorldBox.bottomLeft().y + offsetZ });
-			updateWorldChunks();
+		//	addExpiringChunks(offsetX, offsetZ);
+		//	m_CurrentChunkX = chunkX;
+		//	m_CurrentChunkZ = chunkZ;
+		//	m_WorldBox.setBottomLeftCorner({ m_WorldBox.bottomLeft().x + offsetX, m_WorldBox.bottomLeft().y + offsetZ });
+		//	updateWorldChunks();
 		}
 	}
 
