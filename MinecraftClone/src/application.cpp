@@ -42,7 +42,7 @@
 Application::Application() noexcept : m_IsRunning(false) {
     /* init glfw as main window lib */
     glfwInit();
-    m_Window = std::make_shared<GlfwWindow>("window", 640, 480);
+    m_Window = std::make_shared<GlfwWindow>("window", 1024, 1024);
     m_Input = new Input(m_Window);
     stbi_set_flip_vertically_on_load(1);
 }
@@ -139,7 +139,7 @@ void Application::run() {
     blocksMap[8] = leaves;
 
     game::world::BlocksDatabase blockDatabase(blocksMap);
-    game::world::WorldBox box({ -3, -3 }, 7, 1);
+    game::world::WorldBox box({ -3, -3 }, 10, 1);
 
     game::world::BiomesConfig biomesConfig;
     biomesConfig[0] = { {0.0, 1.0, 0.3, 0.7}, {2, 3, 4, 150} }; // plain
@@ -149,9 +149,14 @@ void Application::run() {
     auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::DummyWorldGenerator>(
         game::world::DummyWorldGenerator::noiseConfig_t{ 1337, 1338, 1333 },
         biomesConfig)); */
-    auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::CliffsWorldGenerator>());
+    std::vector<std::pair<float, float>> erosionFunction({ {-1.0, 1.05}, {-0.7, 1.08}, {-0.6, 1.07}, {0.2, 1.1}, {0.5, 1.09}, {0.7, 1.09}, {1.0, 1.1} }),
+        pvFunction({ {-1.0, 1.2}, {-0.6, 1.14}, {0.2, 1.09}, {0.4, 1.05}, {0.7, 1.04}, {1.0, 0.1} });
+    std::vector<std::pair<float, int>> continentalnessFunction({ {-1.0, 150}, {-0.7, 60}, {-0.5, 65}, {-0.4, 100}, {0.4, 150}, {1.0, 150} });
+    game::world::CliffsWorldGenerator::noisesConfig_t noisesConfig{1337, 1567, 189, 2384, 1098, 10298};
+    auto chunksLoader = std::make_unique<game::world::SingleplayerChunksLoader>(std::make_unique<game::world::CliffsWorldGenerator>(biomesConfig, noisesConfig, continentalnessFunction,
+        erosionFunction, pvFunction));
     game::world::ChunksManager chunksManager(box, blockDatabase, std::move(chunksLoader), &renderer, &tp);
-    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)640 / (GLfloat)480, 0.1f, 100.0f));
+    graphics::Camera camera(glm::perspective(45.0f, (GLfloat)1024 / (GLfloat)1024, 0.1f, 500.0f));
     game::Player player(glm::vec3(0.0, 160.0, 0.0), &camera);
 
     double dt = 1.0 / 60.0;
